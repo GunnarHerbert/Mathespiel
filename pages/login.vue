@@ -15,16 +15,34 @@ function toggleForm() {
   isRegistering.value = !isRegistering.value;
 }
 
-function register() {
-  //TODO: if username doesn't exists already: write userdata in database
-  //TODO: else: tell user that username already exists
+async function register() {
+  //TODO: if username exits already: give visual feedback
   console.log("Registering", registerForm);
+  const response = await $fetch('/api/login', {
+    method: 'POST',
+    body: {
+      action: 'registerUser',
+      username: registerForm.username,
+      email: registerForm.email,
+      password: registerForm.password,
+      grade: registerForm.grade,
+    }
+  });
+  console.log(response);
 }
 
-function login() {
+async function login() {
   //TODO: check if username exists and matches with password
   //TODO: redirect user to main page or return "username or password wrong"-message
   console.log("Logging in", loginForm);
+  const response = await $fetch('/api/login', {
+    method: 'POST',
+    body: {
+      action: 'loginUser',
+      username: loginForm.username,
+      password: loginForm.password,
+    }
+  });
 }
 </script>
 
