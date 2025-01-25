@@ -23,6 +23,7 @@ export default defineEventHandler(async (event) => {
 
         switch (body.action) {
             case 'registerUser': {
+                const hashedPassword = await hashPassword(body.password);
                 try {
                     await db.sql`INSERT INTO users (username, email, password, grade)
                                  VALUES (${body.username}, ${body.email}, ${body.password}, ${body.grade})`;
@@ -42,6 +43,7 @@ export default defineEventHandler(async (event) => {
                 //TODO: case2: password is wrong
                 //TODO: case3: user is logged in already
 
+                break;
             }
 
             default:
