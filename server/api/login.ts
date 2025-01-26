@@ -26,17 +26,21 @@ export default defineEventHandler(async (event) => {
                 const hashedPassword = await hashPassword(body.password);
                 try {
                     await db.sql`INSERT INTO users (username, email, password, grade)
-                                 VALUES (${body.username}, ${body.email}, ${body.password}, ${body.grade})`;
+                                 VALUES (${body.username}, ${body.email}, ${hashedPassword}, ${body.grade})`;
+                    // Starte die Session für den User
+                    await setUserSession(event, {
+                        user: {username: body.username}, // User-Daten, die in der Session gespeichert werden
+                    });
+                    return {success: true, message: "user registered"};
                 } catch (e: any) {
                     if (e.message === 'UNIQUE constraint failed: users.username') {
                         console.log("user already exists", e.message);
-                        return "user already exists";
+                        return {success: false, message: "user already exists"};
                     } else {
                         console.log("unknown server error: ", e.message);
-                        return "unknown server error";
+                        return {success: false, message: "unknown server error"};
                     }
                 }
-                return "succeeded";
             }
             case 'loginUser': {
                 //TODO: case1: user does not exist

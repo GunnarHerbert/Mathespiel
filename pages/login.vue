@@ -10,15 +10,15 @@ const loginForm = reactive({
   username: "",
   password: "",
 })
+const isLoggedIn = ref(false);
+const user = ref(null);
 
-function toggleForm() {
-  isRegistering.value = !isRegistering.value;
-}
+onMounted(() => {
+  checkSession();
+});
 
 async function register() {
-  //TODO: if username exits already: give visual feedback
-  console.log("Registering", registerForm);
-  const response = await $fetch('/api/login', {
+  const registerResponse = await $fetch('/api/login', {
     method: 'POST',
     body: {
       action: 'registerUser',
@@ -28,7 +28,12 @@ async function register() {
       grade: registerForm.grade,
     }
   });
-  console.log(response);
+  if (registerResponse.success) {
+    navigateTo("/main");
+  } else {
+    //TODO: if username exits already: give visual feedback
+    console.log(registerResponse.message);
+  }
 }
 
 async function login() {
@@ -44,9 +49,21 @@ async function login() {
     }
   });
 }
+
+async function checkSession() {
+  const session = await $fetch('/api/session');
+  isLoggedIn.value = session.isLoggedIn;
+  // @ts-ignore
+  user.value = session.user;
+}
+
+function toggleForm() {
+  isRegistering.value = !isRegistering.value;
+}
 </script>
 
 <template>
+  <p v-if="!isLoggedIn">Du bist nicht eingeloggt.</p>
   <div class="auth-container">
     <div class="form-wrapper">
       <!-- Registration Form -->
