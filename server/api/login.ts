@@ -1,6 +1,21 @@
 export default defineEventHandler(async (event) => {
     const db = useDatabase();
-    await db.sql`CREATE TABLE IF NOT EXISTS users ("id" INTEGER PRIMARY KEY, "username" TEXT UNIQUE, "email" TEXT, "password" TEXT, "grade" INTEGER)`;
+    await db.sql`CREATE TABLE IF NOT EXISTS users
+                 (
+                     "id"
+                     INTEGER
+                     PRIMARY
+                     KEY,
+                     "username"
+                     TEXT
+                     UNIQUE,
+                     "email"
+                     TEXT,
+                     "password"
+                     TEXT,
+                     "grade"
+                     INTEGER
+                 )`;
 
     if (event.node.req.method === 'POST') {
         const body = await readBody(event);
@@ -10,7 +25,7 @@ export default defineEventHandler(async (event) => {
                 const hashedPassword = await hashPassword(body.password);
                 try {
                     //TODO: check if username is valid
-                    //TODO: sql injection possible -> use orm (drizzle)
+                    //TODO: sql injection possible? -> use orm (drizzle)
                     await db.sql`INSERT INTO users (username, email, password, grade)
                                  VALUES (${body.username}, ${body.email}, ${hashedPassword}, ${body.grade})`;
                     // Starte die Session für den User
@@ -29,15 +44,24 @@ export default defineEventHandler(async (event) => {
                 }
             }
             case 'loginUser': {
-                //TODO: case1: user does not exist
-                //TODO: case2: password is wrong
-                //TODO: case3: user is logged in already
-                //TODO: get hashedPassword from db
-                const hashedPassword = "";
-                if (await verifyPassword(hashedPassword, body.password)) {
-                    console.log("passwords match");
+                const hashedPasswordRequest = await db.sql`SELECT password
+                                                           FROM users
+                                                           WHERE username = ${body.username}`;
+                if (hashedPasswordRequest.rows.length === 1 && await verifyPassword(hashedPasswordRequest.rows[0].password, body.password)) {
+                    await setUserSession(event, {
+                        user: {username: body.username},
+                    });
+                    return {success: true, message: "user logged in"};
+                } else if (hashedPasswordRequest.rows.length === 1) {
+                    console.log("incorrect username or password");
+                    return {success: false, message: "incorrect username or password"};
+                } else if (hashedPasswordRequest.rows.length === 0) {
+                    console.log("no such user found");
+                    return {success: false, message: "no such user found"};
+                } else {
+                    console.log("###########################unknown server error###########################");
+                    return {success: false, message: "unknown server error"};
                 }
-                break;
             }
 
             default:

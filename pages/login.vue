@@ -10,7 +10,7 @@ const loginForm = reactive({
   username: "",
   password: "",
 })
-const { loggedIn, user, clear, fetch:fetchSession } = useUserSession();
+const {loggedIn, user, clear, fetch: fetchSession} = useUserSession();
 
 async function register() {
   const registerResponse = await $fetch('/api/login', {
@@ -33,10 +33,7 @@ async function register() {
 }
 
 async function login() {
-  //TODO: check if username exists and matches with password
-  //TODO: redirect user to main page or return "username or password wrong"-message
-  console.log("Logging in", loginForm);
-  const response = await $fetch('/api/login', {
+  const loginResponse = await $fetch('/api/login', {
     method: 'POST',
     body: {
       action: 'loginUser',
@@ -44,11 +41,19 @@ async function login() {
       password: loginForm.password,
     }
   });
+  if (loginResponse.success) {
+    await fetchSession();
+    navigateTo("/main");
+  } else {
+    //TODO: if username or password is wrong: give visual feedback
+    console.log(loginResponse.message);
+  }
 }
 
 function toggleForm() {
   isRegistering.value = !isRegistering.value;
 }
+
 import '~/assets/css/login.css'
 </script>
 
@@ -57,7 +62,7 @@ import '~/assets/css/login.css'
   <p v-else>Du bist nicht eingeloggt.</p>
   <button @click="clear()">Abmelden</button>
   <div class="auth-container">
-  <!--TODO: restrictions for username, ...-->
+    <!--TODO: restrictions for username, ...-->
     <div class="form-wrapper">
       <!-- Registration Form -->
       <div v-if="isRegistering">
