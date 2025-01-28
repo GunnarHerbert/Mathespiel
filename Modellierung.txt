@@ -1,0 +1,2 @@
+für jede Jahrgangsgruppe (34, 56, 78) eigene Datenbank.
+Darin jeweils für jede AufgabenID den Lösungsbuchstaben (A-E) und die Schwierigkeitsstufe (3-5) speichern
