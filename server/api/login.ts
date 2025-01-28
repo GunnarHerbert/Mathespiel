@@ -47,15 +47,15 @@ export default defineEventHandler(async (event) => {
                 const hashedPasswordRequest = await db.sql`SELECT password
                                                            FROM users
                                                            WHERE username = ${body.username}`;
-                if (hashedPasswordRequest.rows.length === 1 && await verifyPassword(hashedPasswordRequest.rows[0].password, body.password)) {
+                if (hashedPasswordRequest.rows?.length === 1 && await verifyPassword(<string>hashedPasswordRequest.rows[0].password, body.password)) {
                     await setUserSession(event, {
                         user: {username: body.username},
                     });
                     return {success: true, message: "user logged in"};
-                } else if (hashedPasswordRequest.rows.length === 1) {
+                } else if (hashedPasswordRequest.rows?.length === 1) {
                     console.log("incorrect username or password");
                     return {success: false, message: "incorrect username or password"};
-                } else if (hashedPasswordRequest.rows.length === 0) {
+                } else if (hashedPasswordRequest.rows?.length === 0) {
                     console.log("no such user found");
                     return {success: false, message: "no such user found"};
                 } else {
