@@ -49,6 +49,7 @@ async function login() {
 function toggleForm() {
   isRegistering.value = !isRegistering.value;
 }
+import '~/assets/css/login.css'
 </script>
 
 <template>
