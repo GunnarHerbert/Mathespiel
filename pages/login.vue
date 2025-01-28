@@ -10,12 +10,7 @@ const loginForm = reactive({
   username: "",
   password: "",
 })
-const isLoggedIn = ref(false);
-const user = ref(null);
-
-onMounted(() => {
-  checkSession();
-});
+const { loggedIn, user, clear, fetch:fetchSession } = useUserSession();
 
 async function register() {
   const registerResponse = await $fetch('/api/login', {
@@ -29,6 +24,7 @@ async function register() {
     }
   });
   if (registerResponse.success) {
+    await fetchSession();
     navigateTo("/main");
   } else {
     //TODO: if username exits already: give visual feedback
@@ -50,21 +46,17 @@ async function login() {
   });
 }
 
-async function checkSession() {
-  const session = await $fetch('/api/session');
-  isLoggedIn.value = session.isLoggedIn;
-  // @ts-ignore
-  user.value = session.user;
-}
-
 function toggleForm() {
   isRegistering.value = !isRegistering.value;
 }
 </script>
 
 <template>
-  <p v-if="!isLoggedIn">Du bist nicht eingeloggt.</p>
+  <p v-if="loggedIn">{{ user }}</p>
+  <p v-else>Du bist nicht eingeloggt.</p>
+  <button @click="clear()">Abmelden</button>
   <div class="auth-container">
+  <!--TODO: restrictions for username, ...-->
     <div class="form-wrapper">
       <!-- Registration Form -->
       <div v-if="isRegistering">
@@ -104,5 +96,3 @@ function toggleForm() {
     </div>
   </div>
 </template>
-
-<style src="@/assets/css/login.css"></style>

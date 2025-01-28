@@ -1,6 +1,7 @@
 export default defineEventHandler(async (event) => {
     const db = useDatabase();
     // await db.sql`DROP TABLE IF EXISTS users`;
+    //TODO: change code format
     await db.sql`CREATE TABLE IF NOT EXISTS users
                  (
                      "id"
@@ -25,6 +26,8 @@ export default defineEventHandler(async (event) => {
             case 'registerUser': {
                 const hashedPassword = await hashPassword(body.password);
                 try {
+                    //TODO: check if username is valid
+                    //TODO: sql injection possible -> use orm (drizzle)
                     await db.sql`INSERT INTO users (username, email, password, grade)
                                  VALUES (${body.username}, ${body.email}, ${hashedPassword}, ${body.grade})`;
                     // Starte die Session für den User
@@ -46,7 +49,11 @@ export default defineEventHandler(async (event) => {
                 //TODO: case1: user does not exist
                 //TODO: case2: password is wrong
                 //TODO: case3: user is logged in already
-
+                //TODO: get hashedPassword from db
+                const hashedPassword = "";
+                if (await verifyPassword(hashedPassword, body.password)) {
+                    console.log("passwords match");
+                }
                 break;
             }
 
