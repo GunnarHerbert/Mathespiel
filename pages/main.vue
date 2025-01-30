@@ -9,7 +9,7 @@ function logout() {
 
 <template>
   <div class="flex flex-row min-h-screen justify-center items-center">
-    <div class="relative h-[85vh] w-17/20 bg-gray-200 rounded-xl">
+    <div class="relative h-[85vh] w-10/12 bg-gray-200 rounded-xl">
       <button @click="logout()" class="absolute left-3">Abmelden</button>
       <div class="absolute top-5 right-3 m-4 text-lg font-bold text-gray-700">
         Benutzername: {{ user?.username }} <br> Punkte: 42

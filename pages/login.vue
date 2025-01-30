@@ -58,8 +58,10 @@ import '~/assets/css/login.css'
 </script>
 
 <template>
-  <p v-if="loggedIn">{{ user?.username }}</p>
-  <p v-else>Du bist nicht eingeloggt.</p>
+  <DevOnly>
+    <p v-if="loggedIn">{{ user?.username }}</p>
+    <p v-else>Du bist nicht eingeloggt.</p>
+  </DevOnly>
   <button @click="clear()">Abmelden</button>
   <div class="auth-container">
     <!--TODO: restrictions for username, ...-->

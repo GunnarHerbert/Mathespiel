@@ -8,7 +8,9 @@ const sendAnswer = (answer) => {
 </script>
 
 <template>
-  <button @click="navigateTo('/main')" class="absolute top-5 right-3 text-lg text-gray-700">Hauptmenü</button>
+  <button @click="navigateTo('/main')"
+          class="absolute top-5 right-3 bg-amber-600 text-lg text-gray-700 hover:!bg-amber-500">Hauptmenü
+  </button>
   <div class="flex flex-col justify-center items-center h-screen p-4 bg-gray-100">
     <!-- Container für die Rechenaufgabe -->
     <div class="flex justify-center items-center mb-8">
