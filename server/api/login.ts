@@ -1,22 +1,8 @@
 export default defineEventHandler(async (event) => {
     const db = useDatabase();
-    await db.sql`CREATE TABLE IF NOT EXISTS users
-                 (
-                     "id"
-                     INTEGER
-                     PRIMARY
-                     KEY,
-                     "username"
-                     TEXT
-                     UNIQUE,
-                     "email"
-                     TEXT,
-                     "password"
-                     TEXT,
-                     "grade"
-                     INTEGER
-                 )`;
-
+    // @formatter:off
+    await db.sql`CREATE TABLE IF NOT EXISTS users ("id" INTEGER PRIMARY KEY, "username" TEXT UNIQUE, "email" TEXT, "password" TEXT, "grade" INTEGER)`;
+    // @formatter:on
     if (event.node.req.method === 'POST') {
         const body = await readBody(event);
 

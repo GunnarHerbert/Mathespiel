@@ -1,5 +1,5 @@
 TODO:
-- neue Datenbank tasks34 & tasks56 & tasks78 für die Aufgaben (taskID, taskSolution, taskDifficulty) anlegen
+- Datenbanken tasks34 & tasks56 & tasks78 befüllen
 - neue Datenbank userGameProfile für die User (userName, currentTask, isCurrentTaskSolved, unsolvedTasks) anlegen.
 - bei Registrierung:
     - speichere für jeden User in userGameProfile unsolvedTasks als Reihenfolge zufälliger taskIDs (z.B. als String: "12;20,3;67...;42")
