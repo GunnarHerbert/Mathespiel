@@ -1,6 +1,5 @@
 TODO:
-- Datenbanken tasks34 & tasks56 & tasks78 befüllen
-- neue Datenbank userGameProfile für die User (userName, currentTask, isCurrentTaskSolved, unsolvedTasks) anlegen.
+- neue Datenbank userGameProfile für die User (userId, userName, currentTaskId, isCurrentTaskSolved, unsolvedTasks) anlegen.
 - bei Registrierung:
     - speichere für jeden User in userGameProfile unsolvedTasks als Reihenfolge zufälliger taskIDs (z.B. als String: "12;20,3;67...;42")
     - rufe setNewCurrentTask() auf -> setze currentTask auf die erste taskID
@@ -28,9 +27,10 @@ setNewCurrentTask():
 - setze currentTask=newTaskID
 - setze isCurrentTaskSolved=false
 
+- Datenbanken tasks34 & tasks56 & tasks78 befüllen
+- Konvertiere .gif in .webp
 
-Konvertiere .gif in .webp
 
 Projektstruktur:
 Für jede Jahrgangsgruppe (34, 56, 78) eigene Datenbank.
-Darin jeweils für jede AufgabenID den Lösungsbuchstaben (A-E) und die Schwierigkeitsstufe (3-5) speichern
+Darin jeweils für jede AufgabenID den Lösungsbuchstaben (A-E), die Schwierigkeitsstufe (3-5) und das Jahr der Veröffentlichung speichern
