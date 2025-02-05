@@ -1,4 +1,5 @@
 TODO:
+- fix: Aufgabenbilder richtig in Datenbank einsortieren: Lösungsbuchstabe E falsch und letztes Aufgabenbild an erster Stelle
 - neue Datenbank userGameProfile für die User (userId, userName, currentTaskId, isCurrentTaskSolved, unsolvedTasks) anlegen.
 - bei Registrierung:
     - speichere für jeden User in userGameProfile unsolvedTasks als Reihenfolge zufälliger taskIDs (z.B. als String: "12;20,3;67...;42")
