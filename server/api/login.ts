@@ -14,6 +14,9 @@ export default defineEventHandler(async (event) => {
                     //TODO: sql injection possible? -> use orm (drizzle)
                     await db.sql`INSERT INTO users (username, email, password, grade)
                                  VALUES (${body.username}, ${body.email}, ${hashedPassword}, ${body.grade})`;
+                    const {currentTaskId, unsolvedTasks} = await resetGameProfile(body.grade);
+                    await db.sql`INSERT INTO userGameProfile (username, currentTaskId, isCurrentTaskSolved, unsolvedTasks)
+                                 VALUES (${body.username}, ${currentTaskId}, 0, ${unsolvedTasks})`;
                     // Starte die Session für den User
                     await setUserSession(event, {
                         user: {username: body.username}, // User-Daten, die in der Session gespeichert werden
@@ -56,5 +59,29 @@ export default defineEventHandler(async (event) => {
     }
 
     throw createError({statusCode: 405, message: 'Method not allowed'});
-});
 
+
+    /*
+    * Reset the game profile of the user: currentTask, isCurrentTaskSolved, unsolvedTasks
+    * @param grade: grade of the user
+     */
+    async function resetGameProfile (grade:number) {
+        let table = `tasks56`
+        switch(grade) {
+            case 3 || 4:
+                table = `tasks34`;
+                break;
+            case 5 || 6:
+                table = `tasks56`;
+                break;
+            case 7 || 8:
+                table = `tasks78`;
+                break;
+        }
+        const IdQuery = await db.sql`SELECT id FROM tasks56`;
+        const unsolvedTasks = IdQuery.rows?.map(row => row.id?.toString());
+        const currentTask = unsolvedTasks?.shift();
+        const unsolvedTasksShuffled = unsolvedTasks?.sort(()=>Math.random()-0.5).join(";");
+        return { currentTaskId: currentTask, unsolvedTasks: unsolvedTasksShuffled };
+    }
+});

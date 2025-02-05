@@ -1,9 +1,5 @@
 TODO:
 - fix: Aufgabenbilder richtig in Datenbank einsortieren: Lösungsbuchstabe E falsch und letztes Aufgabenbild an erster Stelle
-- neue Datenbank userGameProfile für die User (userId, userName, currentTaskId, isCurrentTaskSolved, unsolvedTasks) anlegen.
-- bei Registrierung:
-    - speichere für jeden User in userGameProfile unsolvedTasks als Reihenfolge zufälliger taskIDs (z.B. als String: "12;20,3;67...;42")
-    - rufe setNewCurrentTask() auf -> setze currentTask auf die erste taskID
 - wenn user Training betritt:
     - schicke aus Backend die Aufgabe mit taskID = currentTask
     - falls isCurrentTaskSolved=true: disable answerButtons
@@ -35,3 +31,10 @@ setNewCurrentTask():
 Projektstruktur:
 Für jede Jahrgangsgruppe (34, 56, 78) eigene Datenbank.
 Darin jeweils für jede AufgabenID den Lösungsbuchstaben (A-E), die Schwierigkeitsstufe (3-5) und das Jahr der Veröffentlichung speichern
+
+
+Erledigt:
+- neue Datenbank userGameProfile für die User (userId, userName, currentTaskId, isCurrentTaskSolved, unsolvedTasks) anlegen.
+- bei Registrierung:
+    - speichere für jeden User in userGameProfile unsolvedTasks als Reihenfolge zufälliger taskIDs (z.B. als String: "12;20,3;67...;42")
+    - setze currentTask auf die erste taskID
