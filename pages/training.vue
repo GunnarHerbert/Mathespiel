@@ -1,6 +1,7 @@
 <script setup>
 const answerOptions = ['A', 'B', 'C', 'D', 'E'];
 const showSolution = ref(false);
+const taskImagePath = computed(() => `/api/training?sol=${showSolution.value}`);
 
 const toggleSolutionTask = () => {
   showSolution.value = !showSolution.value;
@@ -30,7 +31,7 @@ const nextTask = () => {
   <div class="flex flex-col justify-center items-center h-screen p-4 bg-gray-100">
     <!-- Container für die Rechenaufgabe -->
     <div class="flex justify-center items-center mb-8">
-      <img src="assets/tasks/56/560000.gif" alt="Rechenaufgabe" class="max-w-full h-auto"/>
+      <img :src="taskImagePath" alt="Rechenaufgabe" class="max-w-full h-auto"/>
     </div>
     <br>
     <!-- Buttons A bis E in einer Reihe -->

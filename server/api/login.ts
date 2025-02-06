@@ -79,9 +79,10 @@ export default defineEventHandler(async (event) => {
                 break;
         }
         const IdQuery = await db.sql`SELECT id FROM tasks56`;
-        const unsolvedTasks = IdQuery.rows?.map(row => row.id?.toString());
-        const currentTask = unsolvedTasks?.shift();
-        const unsolvedTasksShuffled = unsolvedTasks?.sort(()=>Math.random()-0.5).join(";");
-        return { currentTaskId: currentTask, unsolvedTasks: unsolvedTasksShuffled };
+        let unsolvedTasksArr = IdQuery.rows?.map(row => row.id?.toString());
+        unsolvedTasksArr = unsolvedTasksArr?.sort(()=>Math.random()-0.5);
+        const currentTask = unsolvedTasksArr?.shift();
+        const unsolvedTasks = unsolvedTasksArr?.join(";");
+        return { currentTaskId: currentTask, unsolvedTasks: unsolvedTasks };
     }
 });

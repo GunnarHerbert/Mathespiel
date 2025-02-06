@@ -1,22 +1,22 @@
 TODO:
 - fix: Aufgabenbilder richtig in Datenbank einsortieren: Lösungsbuchstabe E falsch und letztes Aufgabenbild an erster Stelle
 - wenn user Training betritt:
-    - schicke aus Backend die Aufgabe mit taskID = currentTask
+    - DONE: schicke aus Backend die Aufgabe mit taskID = currentTask
     - falls isCurrentTaskSolved=true: disable answerButtons
     - wenn User Antwort schickt:
         - setze isCurrentTaskSolved auf true
         - prüfe ob Antwort korrekt (taskSolution von currentTask in tasksXX == userAnswer)
-        - coloriere Buttons in entsprechender Farbe und zeige solution
+        - koloriere Buttons in entsprechender Farbe und zeige solution
         - setzte Text in nextTaskButton auf "Aufgabe"
         - disable answerButtons
-    - bei klick auf solutionButton:
+    - bei Klick auf solutionButton:
         - toggle Text im Button zwischen "Lösung" und "Aufgabe"
         - zeige solutionImg bzw taskImg
-    - bei klick auf nextTastButton:
-        - rufe setNewCurrentTask() auf -> setze currentTask auf die nächste taskID
+    - bei klick auf nextTaskButton:
+        - rufe setNewCurrentTask() auf → setze currentTask auf die nächste taskID
         - lade neue Aufgabe
         - enable answerButtons
-        - coloriere Buttons in default Farbe
+        - koloriere Buttons in default Farbe
 
 setNewCurrentTask():
 - suche newTaskID=erste taskID in unsolvedTasks
@@ -26,6 +26,8 @@ setNewCurrentTask():
 
 - Datenbanken tasks34 & tasks56 & tasks78 befüllen
 - Konvertiere .gif in .webp
+- Performance verbessern:
+    - in training.ts: currentTaskId nicht bei jedem Seitenaufruf laden, sondern in Session speichern
 
 
 Projektstruktur:
