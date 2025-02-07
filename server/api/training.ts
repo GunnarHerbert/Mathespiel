@@ -1,36 +1,38 @@
 import {promises as fs} from 'fs';
+import {UserSession} from "#auth-utils";
 
 export default defineEventHandler(async (event) => {
-    await checkIfUserIsLoggedIn(event);
+    const session = await getUserSession(event);
+    await checkIfUserIsLoggedIn(session);
 
     const db = useDatabase();
     if (event.node.req.method === 'POST') {
         //TODO: handle answer post
     } else if (event.node.req.method === 'GET') {
         const dataFromURL = getQuery(event);
-        return await loadImage(dataFromURL.sol);
+        return await loadImage(dataFromURL.sol as string, session);
     }
 
-    async function loadImage(shouldSolutionShow: boolean) {
+    async function loadImage(shouldSolutionShowString: string, session: UserSession) {
+        // get the current task id of the user
         const userTaskIdQuery = await db.sql`SELECT currentTaskId
                                              FROM userGameProfile
-                                             WHERE username = ${session.user.username}`;
-        const userTaskId = userTaskIdQuery.rows?.[0].currentTaskId;
+                                             WHERE username = ${session.user!.username}`;
+        let userTaskId = userTaskIdQuery.rows?.[0].currentTaskId;
 
         const gradeQuery = await db.sql`SELECT grade
                                         FROM users
-                                        WHERE username = ${session.user.username}`;
+                                        WHERE username = ${session.user!.username}`;
         let grade = convertGradeToTable(gradeQuery.rows?.[0].grade);
         // Bild aus dem geschützten Ordner laden
-        let imagePath;
+        let imagePath:string;
         // cast string to boolean
-        shouldSolutionShow = shouldSolutionShow === 'true';
+        let shouldSolutionShow:boolean = shouldSolutionShowString == "true";
         if (shouldSolutionShow) {
-            console.log("shouldSolutionShow is true");
             //TODO: correct filepath to solution
+            userTaskId = userTaskId as number + 1;
             imagePath = `private/tasks/${grade}/${userTaskId}.gif`;
         } else {
-            console.log("shouldSolutionShow is false");
             imagePath = `private/tasks/${grade}/${userTaskId}.gif`;
         }
         try {
@@ -42,19 +44,18 @@ export default defineEventHandler(async (event) => {
         }
     }
 
-    function convertGradeToTable(grade: number) {
+    function convertGradeToTable(grade: unknown) {
         switch (grade) {
             case 3 || 4:
-                return `tasks34`;
+                return `34`;
             case 5 || 6:
-                return `tasks56`;
+                return `56`;
             case 7 || 8:
-                return `tasks78`;
+                return `78`;
         }
     }
 
-    async function checkIfUserIsLoggedIn(event: any) {
-        const session = await getUserSession(event);
+    async function checkIfUserIsLoggedIn(session: any) {
         if (!session.user) {
             throw createError({statusCode: 401, message: 'Nicht eingeloggt'});
         }
