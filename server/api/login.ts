@@ -66,19 +66,20 @@ export default defineEventHandler(async (event) => {
     * @param grade: grade of the user
      */
     async function resetGameProfile (grade:number) {
-        let table = `tasks56`
+        let IdQuery;
         switch(grade) {
-            case 3 || 4:
-                table = `tasks34`;
+            case 3: case 4:
+                IdQuery = await db.sql`SELECT id FROM tasks34`;
                 break;
-            case 5 || 6:
-                table = `tasks56`;
+            case 5 : case 6:
+                IdQuery = await db.sql`SELECT id FROM tasks56`;
                 break;
-            case 7 || 8:
-                table = `tasks78`;
+            case 7: case 8:
+                IdQuery = await db.sql`SELECT id FROM tasks78`;
                 break;
+            default:
+                throw createError({statusCode: 400, message: 'Ungültige Aktion'});
         }
-        const IdQuery = await db.sql`SELECT id FROM tasks56`;
         let unsolvedTasksArr = IdQuery.rows?.map(row => row.id?.toString());
         unsolvedTasksArr = unsolvedTasksArr?.sort(()=>Math.random()-0.5);
         const currentTask = unsolvedTasksArr?.shift();
