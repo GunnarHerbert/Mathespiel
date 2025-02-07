@@ -16,12 +16,19 @@ const toggleSolutionTask = () => {
   //TODO
 };
 
-const sendAnswer = (answer) => {
+const sendAnswer = async (answer) => {
   console.log('Ausgewählte Antwort:', answer);
   isAnswerSent.value = true;
   userAnswerLetter.value = answer;
   showSolution.value = true;
-  //TODO
+  const validateAnswerQuery = await $fetch('/api/training', {
+    method: 'POST',
+    body: {
+      action: 'validateUserAnswer',
+      userAnswer: userAnswerLetter.value,
+    }
+  });
+  correctAnswerLetter.value = validateAnswerQuery.correctAnswer;
 };
 
 const nextTask = () => {
@@ -55,10 +62,12 @@ const nextTask = () => {
         {{ option }}
       </button>
     </div>
-    <button @click="toggleSolutionTask" class="mt-2 buttonDefault text-white text-lg px-6 py-3 rounded-lg shadow-md transition duration-200">
+    <button @click="toggleSolutionTask"
+            class="mt-2 buttonDefault text-white text-lg px-6 py-3 rounded-lg shadow-md transition duration-200">
       {{ showSolution ? 'Aufgabe' : 'Lösung' }} anzeigen
     </button>
-    <button @click="nextTask" class="mt-2 buttonDefault text-white text-lg px-6 py-3 rounded-lg shadow-md transition duration-200">
+    <button @click="nextTask"
+            class="mt-2 buttonDefault text-white text-lg px-6 py-3 rounded-lg shadow-md transition duration-200">
       Nächste Aufgabe
     </button>
   </div>
@@ -81,24 +90,25 @@ button {
   border-radius: 0.375rem;
 }
 
-.buttonDefault{
+.buttonDefault {
   --tw-bg-opacity: 1;
   background-color: rgb(249 115 22 / var(--tw-bg-opacity, 1));
 }
-.buttonDefault:hover{
+
+.buttonDefault:hover {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(245 158 11 / var(--tw-bg-opacity, 1)) !important;
 }
 
-.buttonDisabledDefault{
+.buttonDisabledDefault {
   background-color: rgb(155, 50, 4);
 }
 
-.buttonDisabledCorrect{
+.buttonDisabledCorrect {
   background-color: rgb(1, 68, 1) !important;
 }
 
-.buttonDisabledFalse{
+.buttonDisabledFalse {
   background-color: rgb(86, 2, 2);
 }
 
