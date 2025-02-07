@@ -1,5 +1,5 @@
 TODO:
-- fix: Aufgabenbilder richtig in Datenbank einsortieren: Lösungsbuchstabe E falsch und letztes Aufgabenbild an erster Stelle
+- **fix: Aufgabenbilder falsch sortiert!!** Aufgabenbilder richtig in Datenbank einsortieren: Lösungsbuchstabe E falsch und letztes Aufgabenbild an erster Stelle
 - wenn user Training betritt:
     - DONE: schicke aus Backend die Aufgabe mit taskID = currentTask
     - falls isCurrentTaskSolved=true: disable answerButtons
