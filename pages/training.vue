@@ -2,6 +2,9 @@
 const answerOptions = ['A', 'B', 'C', 'D', 'E'];
 const showSolution = ref(false);
 const taskImagePath = computed(() => `/api/training?sol=${showSolution.value}`);
+const isAnswerSent = ref(false);
+const correctAnswerLetter = ref("");
+const userAnswerLetter = ref("");
 
 const toggleSolutionTask = () => {
   showSolution.value = !showSolution.value;
@@ -15,18 +18,25 @@ const toggleSolutionTask = () => {
 
 const sendAnswer = (answer) => {
   console.log('Ausgewählte Antwort:', answer);
+  isAnswerSent.value = true;
+  userAnswerLetter.value = answer;
+  showSolution.value = true;
   //TODO
 };
 
 const nextTask = () => {
   console.log('Nächste Aufgabe');
-  //TODO
+  userAnswerLetter.value = '';
+  correctAnswerLetter.value = '';
+  isAnswerSent.value = false;
+  showSolution.value = false;
+  //TODO: Anfrage an Backend für nächste Aufgabe
 };
 </script>
 
 <template>
   <button @click="navigateTo('/main')"
-          class="absolute top-5 right-3 bg-amber-600 text-lg text-gray-700 hover:!bg-amber-500">Hauptmenü
+          class="absolute top-5 right-3 text-lg text-gray-700 buttonDefault">Hauptmenü
   </button>
   <div class="flex flex-col justify-center items-center h-screen p-4 bg-gray-100">
     <!-- Container für die Rechenaufgabe -->
@@ -36,15 +46,19 @@ const nextTask = () => {
     <br>
     <!-- Buttons A bis E in einer Reihe -->
     <div class="flex gap-x-4">
-      <button v-for="(option, index) in answerOptions" :key="index" @click="sendAnswer(option)"
-              class="bg-orange-500 text-white text-lg px-6 py-3 rounded-lg shadow-md hover:!bg-orange-600 transition duration-200">
+      <button v-for="(option, index) in answerOptions" :key="index" @click="sendAnswer(option)" :disabled="isAnswerSent"
+              class="text-white text-lg px-6 py-3 rounded-lg shadow-md transition duration-200"
+              :class="!isAnswerSent ? 'buttonDefault' :
+                      option === correctAnswerLetter ? 'buttonDisabledCorrect' :
+                      option === userAnswerLetter ? 'buttonDisabledFalse' :
+                      'buttonDisabledDefault'">
         {{ option }}
       </button>
     </div>
-    <button @click="toggleSolutionTask" class="mt-2 bg-orange-500 text-white text-lg px-6 py-3 rounded-lg shadow-md transition duration-200">
+    <button @click="toggleSolutionTask" class="mt-2 buttonDefault text-white text-lg px-6 py-3 rounded-lg shadow-md transition duration-200">
       {{ showSolution ? 'Aufgabe' : 'Lösung' }} anzeigen
     </button>
-    <button @click="nextTask" class="mt-2 bg-orange-500 text-white text-lg px-6 py-3 rounded-lg shadow-md transition duration-200">
+    <button @click="nextTask" class="mt-2 buttonDefault text-white text-lg px-6 py-3 rounded-lg shadow-md transition duration-200">
       Nächste Aufgabe
     </button>
   </div>
@@ -67,7 +81,25 @@ button {
   border-radius: 0.375rem;
 }
 
-button:hover {
-  background-color: rgb(234, 88, 12);
+.buttonDefault{
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 115 22 / var(--tw-bg-opacity, 1));
 }
+.buttonDefault:hover{
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(245 158 11 / var(--tw-bg-opacity, 1)) !important;
+}
+
+.buttonDisabledDefault{
+  background-color: rgb(155, 50, 4);
+}
+
+.buttonDisabledCorrect{
+  background-color: rgb(1, 68, 1) !important;
+}
+
+.buttonDisabledFalse{
+  background-color: rgb(86, 2, 2);
+}
+
 </style>
