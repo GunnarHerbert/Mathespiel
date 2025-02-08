@@ -18,6 +18,8 @@ TODO:
         - enable answerButtons
         - koloriere Buttons in default Farbe
 
+- Lösungsbild nur erreichbar, wenn currentTask gelöst
+
 setNewCurrentTask():
 - suche newTaskID=erste taskID in unsolvedTasks
 - entferne newTaskID aus unsolvedTasks

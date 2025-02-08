@@ -4,7 +4,6 @@ import {UserSession} from "#auth-utils";
 export default defineEventHandler(async (event) => {
     const session = await getUserSession(event);
     await checkIfUserIsLoggedIn(session);
-
     const db = useDatabase();
     // handle POST and GET requests
     if (event.node.req.method === 'POST') {
@@ -21,7 +20,17 @@ export default defineEventHandler(async (event) => {
         }
     } else if (event.node.req.method === 'GET') {
         const dataFromURL = getQuery(event);
-        return await loadImage(dataFromURL.sol as string, session);
+        switch (dataFromURL.action) {
+            case 'loadImage': {
+                return await loadImage(dataFromURL.sol as string, session);
+            }
+            case 'nextTask': {
+                await setNextTaskId(session);
+                break;
+            }
+            default:
+                throw createError({statusCode: 400, message: 'Ungültige Aktion'});
+        }
     }
 
     // load the task/solution image from the private folder
@@ -52,6 +61,31 @@ export default defineEventHandler(async (event) => {
         } catch {
             throw createError({statusCode: 404, message: 'Bild nicht gefunden'});
         }
+    }
+
+    // get the next task id for the user from his game profile
+    async function setNextTaskId(session: UserSession) {
+        // remove the first task id from the unsolvedTasks
+        const unsolvedTasksQuery = await db.sql`SELECT unsolvedTasks
+                                                FROM userGameProfile
+                                                WHERE username = ${session.user!.username}`;
+        const unsolvedTasks = unsolvedTasksQuery.rows?.[0].unsolvedTasks as string;
+        const unsolvedTasksArr = unsolvedTasks.split(';');
+        const newTaskId = unsolvedTasksArr.shift();
+        //check if newTaskId is undefined
+        if (newTaskId === "") {
+            //TODO: what to do if there are no more tasks
+            console.log("Keine weiteren Aufgaben");
+            //call function resetGameProfile from login.ts
+        }
+        const newUnsolvedTasks = unsolvedTasksArr.join(';');
+        // update the unsolvedTasks of the user with the new current taskId removed
+        await db.sql`UPDATE userGameProfile
+                    SET unsolvedTasks = ${newUnsolvedTasks}
+                    WHERE username = ${session.user!.username}`;
+        await db.sql`UPDATE userGameProfile
+                    SET currentTaskId = ${newTaskId}
+                    WHERE username = ${session.user!.username}`;
     }
 
     // get correct answer for current task

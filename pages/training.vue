@@ -1,7 +1,7 @@
 <script setup>
 const answerOptions = ['A', 'B', 'C', 'D', 'E'];
 const showSolution = ref(false);
-const taskImagePath = computed(() => `/api/training?sol=${showSolution.value}`);
+const taskImagePath = computed(() => `/api/training?action=loadImage&sol=${showSolution.value}`);
 const isAnswerSent = ref(false);
 const correctAnswerLetter = ref("");
 const userAnswerLetter = ref("");
@@ -37,6 +37,12 @@ const nextTask = () => {
   isAnswerSent.value = false;
   showSolution.value = false;
   //TODO: Anfrage an Backend für nächste Aufgabe
+  // send GET Request with action=nextTask (/api/training?action=nextTask)
+  $fetch('/api/training?action=nextTask', {
+    method: 'GET',
+  });
+
+
 };
 </script>
 
