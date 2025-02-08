@@ -1,5 +1,6 @@
 import {promises as fs} from 'fs';
 import {UserSession} from "#auth-utils";
+import { resetGameProfile } from "../utils/resetGameProfile";
 
 export default defineEventHandler(async (event) => {
     const session = await getUserSession(event);
@@ -76,7 +77,10 @@ export default defineEventHandler(async (event) => {
         if (newTaskId === "") {
             //TODO: what to do if there are no more tasks
             console.log("Keine weiteren Aufgaben");
-            //call function resetGameProfile from login.ts
+            //TODO: grade is hardcoded
+            const grade = 5;
+            await resetGameProfile(session, grade);
+            return;
         }
         const newUnsolvedTasks = unsolvedTasksArr.join(';');
         // update the unsolvedTasks of the user with the new current taskId removed

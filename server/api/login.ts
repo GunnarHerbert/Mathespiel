@@ -1,3 +1,5 @@
+import { resetGameProfile } from "../utils/resetGameProfile";
+
 export default defineEventHandler(async (event) => {
     const db = useDatabase();
     // @formatter:off
@@ -14,13 +16,12 @@ export default defineEventHandler(async (event) => {
                     //TODO: sql injection possible? -> use orm (drizzle)
                     await db.sql`INSERT INTO users (username, email, password, grade)
                                  VALUES (${body.username}, ${body.email}, ${hashedPassword}, ${body.grade})`;
-                    const {currentTaskId, unsolvedTasks} = await resetGameProfile(body.grade);
-                    await db.sql`INSERT INTO userGameProfile (username, currentTaskId, isCurrentTaskSolved, unsolvedTasks)
-                                 VALUES (${body.username}, ${currentTaskId}, 0, ${unsolvedTasks})`;
                     // Starte die Session für den User
                     await setUserSession(event, {
                         user: {username: body.username}, // User-Daten, die in der Session gespeichert werden
                     });
+                    const session = await getUserSession(event);
+                    await resetGameProfile(session, body.grade);
                     return {success: true, message: "user registered"};
                 } catch (e: any) {
                     if (e.message === 'UNIQUE constraint failed: users.username') {
@@ -59,31 +60,4 @@ export default defineEventHandler(async (event) => {
     }
 
     throw createError({statusCode: 405, message: 'Method not allowed'});
-
-
-    /*
-    * Reset the game profile of the user: currentTask, isCurrentTaskSolved, unsolvedTasks
-    * @param grade: grade of the user
-     */
-    async function resetGameProfile (grade:number) {
-        let IdQuery;
-        switch(grade) {
-            case 3: case 4:
-                IdQuery = await db.sql`SELECT id FROM tasks34`;
-                break;
-            case 5 : case 6:
-                IdQuery = await db.sql`SELECT id FROM tasks56`;
-                break;
-            case 7: case 8:
-                IdQuery = await db.sql`SELECT id FROM tasks78`;
-                break;
-            default:
-                throw createError({statusCode: 400, message: 'Ungültige Aktion'});
-        }
-        let unsolvedTasksArr = IdQuery.rows?.map(row => row.id?.toString());
-        unsolvedTasksArr = unsolvedTasksArr?.sort(()=>Math.random()-0.5);
-        const currentTask = unsolvedTasksArr?.shift();
-        const unsolvedTasks = unsolvedTasksArr?.join(";");
-        return { currentTaskId: currentTask, unsolvedTasks: unsolvedTasks };
-    }
 });
