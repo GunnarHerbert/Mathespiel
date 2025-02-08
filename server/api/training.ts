@@ -14,6 +14,7 @@ export default defineEventHandler(async (event) => {
             case 'validateUserAnswer': {
                 let currentTaskId: number = await getCurrentTaskId(session);
                 let correctAnswerLetter: string = await getCorrectAnswer(currentTaskId, session);
+                await setIsCurrentTaskSolved(session, 1);
                 return {success: true, correctAnswer: correctAnswerLetter};
             }
             default:
@@ -82,6 +83,13 @@ export default defineEventHandler(async (event) => {
                      WHERE username = ${session.user!.username}`;
         await db.sql`UPDATE userGameProfile
                      SET currentTaskId = ${newTaskId}
+                     WHERE username = ${session.user!.username}`;
+    }
+
+    // set isCurrentTaskSolved (0 means the user hasn't solved the task, 1 means the user has solved the task)
+    async function setIsCurrentTaskSolved(session: UserSession, isCurrentTaskSolved: number) {
+        await db.sql`UPDATE userGameProfile
+                     SET isCurrentTaskSolved = ${isCurrentTaskSolved}
                      WHERE username = ${session.user!.username}`;
     }
 

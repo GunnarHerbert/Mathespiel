@@ -1,10 +1,12 @@
 <script setup>
 const answerOptions = ['A', 'B', 'C', 'D', 'E'];
 const showSolution = ref(false);
-const taskImagePath = computed(() => `/api/training?action=loadImage&sol=${showSolution.value}`);
+const taskImagePath = computed(() => `/api/training?action=loadImage&sol=${showSolution.value}&t=${Date.now()}`);
 const isAnswerSent = ref(false);
 const correctAnswerLetter = ref("");
 const userAnswerLetter = ref("");
+
+//TODO: check if task is already solved by user. If yes, show solution and disable buttons
 
 const toggleSolutionTask = () => {
   showSolution.value = !showSolution.value;
@@ -30,19 +32,18 @@ const sendAnswer = async (answer) => {
   correctAnswerLetter.value = validateAnswerQuery.correctAnswer;
 };
 
-const nextTask = () => {
-  console.log('Nächste Aufgabe');
+const nextTask = async () => {
   userAnswerLetter.value = '';
   correctAnswerLetter.value = '';
-  isAnswerSent.value = false;
-  showSolution.value = false;
-  //TODO: Anfrage an Backend für nächste Aufgabe
-  // send GET Request with action=nextTask (/api/training?action=nextTask)
-  $fetch('/api/training?action=nextTask', {
+  await $fetch('/api/training?action=nextTask', {
     method: 'GET',
   });
-
-
+  //trigger computed value taskImagePath to load new image
+  showSolution.value = !showSolution.value;
+  if (showSolution.value) {
+    showSolution.value = false;
+  }
+  isAnswerSent.value = false;
 };
 </script>
 
@@ -80,15 +81,7 @@ const nextTask = () => {
 
 
 <style scoped>
-/* Optional: Stil für den Container und Buttons */
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-
+/* Optional: Stil für die Buttons */
 button {
   font-size: 1.25rem;
   padding: 1rem 2rem;
@@ -116,5 +109,4 @@ button {
 .buttonDisabledFalse {
   background-color: rgb(86, 2, 2);
 }
-
 </style>
