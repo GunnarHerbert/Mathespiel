@@ -6,45 +6,25 @@ export default defineEventHandler(async (event) => {
     await checkIfUserIsLoggedIn(session);
 
     const db = useDatabase();
+    // handle POST and GET requests
     if (event.node.req.method === 'POST') {
-        //TODO: handle answer post
-        console.log("post request received");
-        let currentTaskId: number = await getCurrentTaskId(session);
-        const gradeQuery = await db.sql`SELECT grade
-                                        FROM users
-                                        WHERE username = ${session.user!.username}`;
-
-        let correctAnswerQuery;
-        switch (gradeQuery.rows?.[0].grade) {
-            case 3:
-            case 4:
-                correctAnswerQuery = await db.sql`SELECT solution
-                                                  FROM tasks34
-                                                  WHERE id = ${currentTaskId}`;
-                break;
-            case 5 :
-            case 6:
-                correctAnswerQuery = await db.sql`SELECT solution
-                                                  FROM tasks56
-                                                  WHERE id = ${currentTaskId}`;
-                break;
-            case 7:
-            case 8:
-                correctAnswerQuery = await db.sql`SELECT solution
-                                                  FROM tasks78
-                                                  WHERE id = ${currentTaskId}`;
-                break;
+        const body = await readBody(event);
+        switch (body.action) {
+            // send user correct answer for his current task
+            case 'validateUserAnswer': {
+                let currentTaskId: number = await getCurrentTaskId(session);
+                let correctAnswerLetter: string = await getCorrectAnswer(currentTaskId, session);
+                return {success: true, correctAnswer: correctAnswerLetter};
+            }
             default:
                 throw createError({statusCode: 400, message: 'Ungültige Aktion'});
         }
-        let correctAnswerLetter = correctAnswerQuery.rows![0].solution as string;
-        console.log("correctAnswerLetter: ", correctAnswerLetter);
-        return {success: true, correctAnswer: correctAnswerLetter};
     } else if (event.node.req.method === 'GET') {
         const dataFromURL = getQuery(event);
         return await loadImage(dataFromURL.sol as string, session);
     }
 
+    // load the task/solution image from the private folder
     async function loadImage(shouldSolutionShowString: string, session: UserSession) {
         // get the current task id of the user
         console.log("Debug1");
@@ -74,6 +54,39 @@ export default defineEventHandler(async (event) => {
         }
     }
 
+    // get correct answer for current task
+    async function getCorrectAnswer(currentTaskId: number, session: UserSession) {
+        const gradeQuery = await db.sql`SELECT grade
+                                        FROM users
+                                        WHERE username = ${session.user!.username}`;
+
+        let correctAnswerQuery;
+        switch (gradeQuery.rows?.[0].grade) {
+            case 3:
+            case 4:
+                correctAnswerQuery = await db.sql`SELECT solution
+                                                  FROM tasks34
+                                                  WHERE id = ${currentTaskId}`;
+                break;
+            case 5 :
+            case 6:
+                correctAnswerQuery = await db.sql`SELECT solution
+                                                  FROM tasks56
+                                                  WHERE id = ${currentTaskId}`;
+                break;
+            case 7:
+            case 8:
+                correctAnswerQuery = await db.sql`SELECT solution
+                                                  FROM tasks78
+                                                  WHERE id = ${currentTaskId}`;
+                break;
+            default:
+                throw createError({statusCode: 400, message: 'Ungültige Aktion'});
+        }
+        return correctAnswerQuery.rows?.[0].solution as string;
+    }
+
+    // get the current taskId of the user
     async function getCurrentTaskId(session: UserSession) {
         const userTaskIdQuery = await db.sql`SELECT currentTaskId
                                              FROM userGameProfile
@@ -81,6 +94,7 @@ export default defineEventHandler(async (event) => {
         return userTaskIdQuery.rows?.[0].currentTaskId as number;
     }
 
+    // convert grade to table name
     function convertGradeToTable(grade: unknown) {
         switch (grade) {
             case 3 || 4:
@@ -92,6 +106,7 @@ export default defineEventHandler(async (event) => {
         }
     }
 
+    // check if user is logged in
     async function checkIfUserIsLoggedIn(session: any) {
         if (!session.user) {
             throw createError({statusCode: 401, message: 'Nicht eingeloggt'});

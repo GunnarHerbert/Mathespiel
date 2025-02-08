@@ -13,7 +13,6 @@ const toggleSolutionTask = () => {
   } else {
     console.log('Aufgabe anzeigen');
   }
-  //TODO
 };
 
 const sendAnswer = async (answer) => {

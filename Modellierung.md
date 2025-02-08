@@ -2,17 +2,17 @@ TODO:
 - **fix: Aufgabenbilder falsch sortiert!!** Aufgabenbilder richtig in Datenbank einsortieren: Lösungsbuchstabe E falsch und letztes Aufgabenbild an erster Stelle
 - wenn user Training betritt:
     - DONE: schicke aus Backend die Aufgabe mit taskID = currentTask
-    - falls isCurrentTaskSolved=true: disable answerButtons
-    - wenn User Antwort schickt:
-        - setze isCurrentTaskSolved auf true
-        - prüfe ob Antwort korrekt (taskSolution von currentTask in tasksXX == userAnswer)
-        - koloriere Buttons in entsprechender Farbe und zeige solution
-        - setzte Text in nextTaskButton auf "Aufgabe"
-        - disable answerButtons
-    - bei Klick auf solutionButton:
-        - toggle Text im Button zwischen "Lösung" und "Aufgabe"
-        - zeige solutionImg bzw taskImg
-    - bei klick auf nextTaskButton:
+    - **falls isCurrentTaskSolved=true: disable answerButtons**
+    - DONE: wenn User Antwort schickt:
+        - DONE: setze isCurrentTaskSolved auf true
+        - DONE: prüfe ob Antwort korrekt (taskSolution von currentTask in tasksXX == userAnswer)
+        - DONE: koloriere Buttons in entsprechender Farbe und zeige solution
+        - DONE: setzte Text in nextTaskButton auf "Aufgabe"
+        - DONE: disable answerButtons
+    - DONE: bei Klick auf solutionButton:
+        - DONE: toggle Text im Button zwischen "Lösung" und "Aufgabe"
+        - DONE: zeige solutionImg bzw taskImg
+    - **bei klick auf nextTaskButton:**
         - rufe setNewCurrentTask() auf → setze currentTask auf die nächste taskID
         - lade neue Aufgabe
         - enable answerButtons
