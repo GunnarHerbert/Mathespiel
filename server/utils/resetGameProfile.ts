@@ -3,10 +3,10 @@ import {UserSession} from "#auth-utils";
 * Reset the game profile of the user: currentTask, isCurrentTaskSolved, unsolvedTasks
 * @param grade: grade of the user
 */
-export const resetGameProfile = async (session: UserSession, grade: number) => {
+export const resetGameProfile = async (session: UserSession) => {
     const db = useDatabase();
     let IdQuery;
-    switch (grade) {
+    switch (session.user?.grade) {
         case 3:
         case 4:
             IdQuery = await db.sql`SELECT id

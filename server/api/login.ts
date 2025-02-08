@@ -1,4 +1,4 @@
-import { resetGameProfile } from "../utils/resetGameProfile";
+import {resetGameProfile} from "../utils/resetGameProfile";
 
 export default defineEventHandler(async (event) => {
     const db = useDatabase();
@@ -18,10 +18,10 @@ export default defineEventHandler(async (event) => {
                                  VALUES (${body.username}, ${body.email}, ${hashedPassword}, ${body.grade})`;
                     // Starte die Session für den User
                     await setUserSession(event, {
-                        user: {username: body.username}, // User-Daten, die in der Session gespeichert werden
+                        user: {username: body.username, grade: body.grade}, // User-Daten, die in der Session gespeichert werden
                     });
                     const session = await getUserSession(event);
-                    await resetGameProfile(session, body.grade);
+                    await resetGameProfile(session);
                     return {success: true, message: "user registered"};
                 } catch (e: any) {
                     if (e.message === 'UNIQUE constraint failed: users.username') {
@@ -38,8 +38,13 @@ export default defineEventHandler(async (event) => {
                                                            FROM users
                                                            WHERE username = ${body.username}`;
                 if (hashedPasswordRequest.rows?.length === 1 && await verifyPassword(<string>hashedPasswordRequest.rows[0].password, body.password)) {
+                    //get grade from users table
+                    const gradeRequest = await db.sql`SELECT grade
+                                                      FROM users
+                                                      WHERE username = ${body.username}`;
+                    const grade = gradeRequest.rows?.[0].grade as number;
                     await setUserSession(event, {
-                        user: {username: body.username},
+                        user: {username: body.username, grade: grade},
                     });
                     return {success: true, message: "user logged in"};
                 } else if (hashedPasswordRequest.rows?.length === 1) {

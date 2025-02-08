@@ -1,6 +1,6 @@
 import {promises as fs} from 'fs';
 import {UserSession} from "#auth-utils";
-import { resetGameProfile } from "../utils/resetGameProfile";
+import {resetGameProfile} from "../utils/resetGameProfile";
 
 export default defineEventHandler(async (event) => {
     const session = await getUserSession(event);
@@ -37,13 +37,8 @@ export default defineEventHandler(async (event) => {
     // load the task/solution image from the private folder
     async function loadImage(shouldSolutionShowString: string, session: UserSession) {
         // get the current task id of the user
-        console.log("Debug1");
         let userTaskId: number = await getCurrentTaskId(session);
-        console.log("userTaskId: ", userTaskId);
-        const gradeQuery = await db.sql`SELECT grade
-                                        FROM users
-                                        WHERE username = ${session.user!.username}`;
-        let grade: string = convertGradeToTable(gradeQuery.rows?.[0].grade)!;
+        let grades: string = convertGradeToGrades(session.user!.grade)!;
         // Bild aus dem geschützten Ordner laden
         let imagePath: string;
         // cast string to boolean
@@ -51,9 +46,9 @@ export default defineEventHandler(async (event) => {
         if (shouldSolutionShow) {
             //TODO: correct filepath to solution
             userTaskId = userTaskId as number + 1;
-            imagePath = `private/tasks/${grade}/${userTaskId}.gif`;
+            imagePath = `private/tasks/${grades}/${userTaskId}.gif`;
         } else {
-            imagePath = `private/tasks/${grade}/${userTaskId}.gif`;
+            imagePath = `private/tasks/${grades}/${userTaskId}.gif`;
         }
         try {
             const file = await fs.readFile(imagePath);
@@ -77,29 +72,23 @@ export default defineEventHandler(async (event) => {
         if (newTaskId === "") {
             //TODO: what to do if there are no more tasks
             console.log("Keine weiteren Aufgaben");
-            //TODO: grade is hardcoded
-            const grade = 5;
-            await resetGameProfile(session, grade);
+            await resetGameProfile(session);
             return;
         }
         const newUnsolvedTasks = unsolvedTasksArr.join(';');
         // update the unsolvedTasks of the user with the new current taskId removed
         await db.sql`UPDATE userGameProfile
-                    SET unsolvedTasks = ${newUnsolvedTasks}
-                    WHERE username = ${session.user!.username}`;
+                     SET unsolvedTasks = ${newUnsolvedTasks}
+                     WHERE username = ${session.user!.username}`;
         await db.sql`UPDATE userGameProfile
-                    SET currentTaskId = ${newTaskId}
-                    WHERE username = ${session.user!.username}`;
+                     SET currentTaskId = ${newTaskId}
+                     WHERE username = ${session.user!.username}`;
     }
 
     // get correct answer for current task
     async function getCorrectAnswer(currentTaskId: number, session: UserSession) {
-        const gradeQuery = await db.sql`SELECT grade
-                                        FROM users
-                                        WHERE username = ${session.user!.username}`;
-
         let correctAnswerQuery;
-        switch (gradeQuery.rows?.[0].grade) {
+        switch (session.user?.grade) {
             case 3:
             case 4:
                 correctAnswerQuery = await db.sql`SELECT solution
@@ -133,7 +122,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // convert grade to table name
-    function convertGradeToTable(grade: unknown) {
+    function convertGradeToGrades(grade: number): string {
         switch (grade) {
             case 3 || 4:
                 return `34`;
@@ -141,6 +130,8 @@ export default defineEventHandler(async (event) => {
                 return `56`;
             case 7 || 8:
                 return `78`;
+            default:
+                throw createError({statusCode: 400, message: 'Illegal State. Grade not found'});
         }
     }
 
