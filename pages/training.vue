@@ -1,11 +1,13 @@
 <script setup>
 const answerOptions = ['A', 'B', 'C', 'D', 'E'];
-const showSolution = ref(false);
+const {user} = useUserSession();
 const taskImagePath = ref("");
 const isAnswerSent = ref(false);
-const correctAnswerLetter = ref("");
+const showSolution = ref(false);
 const userAnswerLetter = ref("");
-const {user} = useUserSession();
+const correctAnswerLetter = ref("");
+const pointsDelta = ref(null);
+const showPointsDelta = ref(false);
 
 if (user.value.isCurrentTaskSolved === 1) {
   showSolution.value = true;
@@ -32,11 +34,19 @@ const sendAnswer = async (answer) => {
   });
   taskImagePath.value = `/api/training?action=loadImage&sol=${showSolution.value}&t=${Date.now()}`;
   correctAnswerLetter.value = validateAnswerQuery.correctAnswer;
+  pointsDelta.value = validateAnswerQuery.pointsDelta;
+  showPointsDelta.value = true;
+  // Nach 2 Sekunden wieder ausblenden
+  setTimeout(() => {
+    showPointsDelta.value = false;
+  }, 3000);
+  //TODO: use new rank and points from response to display them (reachable in user.value)
 };
 
 const nextTask = async () => {
   userAnswerLetter.value = '';
   correctAnswerLetter.value = '';
+  showPointsDelta.value = false;
   await $fetch('/api/training?action=nextTask', {
     method: 'GET',
   });
@@ -51,6 +61,13 @@ const nextTask = async () => {
           class="absolute top-5 right-3 text-lg text-gray-700 buttonDefault">Hauptmenü
   </button>
   <div class="flex flex-col justify-center items-center h-screen p-4 bg-gray-100">
+    <div v-if="showPointsDelta"
+         :class="{
+       'text-green-600': pointsDelta > 0,
+       'text-red-600': pointsDelta < 0}"
+         class="text-2xl font-bold mt-2">
+      {{ pointsDelta > 0 ? '+' : '' }}{{ pointsDelta }} Punkte!
+    </div>
     <!-- Container für die Rechenaufgabe -->
     <div class="flex justify-center items-center mb-8 w-full" style="height: 250px;">
       <img :src="taskImagePath" alt="Rechenaufgabe" class="max-w-full h-4/5 object-contain"/>

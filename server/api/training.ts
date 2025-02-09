@@ -12,9 +12,22 @@ export default defineEventHandler(async (event) => {
             // send user correct answer for his current task
             case 'validateUserAnswer': {
                 let currentTaskId: number = await getCurrentTaskId(session);
-                let correctAnswerLetter: string = await getCorrectAnswer(currentTaskId, session);
+                let {correctAnswer: correctAnswerLetter, difficulty} = await getCorrectAnswer(currentTaskId, session);
                 await setIsCurrentTaskSolved(session, 1);
-                return {success: true, correctAnswer: correctAnswerLetter};
+                let {
+                    newRank,
+                    newPoints,
+                    pointsDelta,
+                    newCrystals
+                } = await setNewUserStats(session, body.userAnswer === correctAnswerLetter, difficulty);
+                return {
+                    success: true,
+                    correctAnswer: correctAnswerLetter,
+                    newRank,
+                    newPoints,
+                    pointsDelta,
+                    newCrystals
+                };
             }
             default:
                 throw createError({statusCode: 400, message: 'Ungültige Aktion'});
@@ -44,9 +57,7 @@ export default defineEventHandler(async (event) => {
         let imagePath: string;
         // cast string to boolean
         let shouldSolutionShow: boolean = shouldSolutionShowString == "true";
-        console.log("shouldSolutionShow", shouldSolutionShow);
-        console.log("isCurrentTaskSolved", session.user?.isCurrentTaskSolved);
-        if (shouldSolutionShow && session.user?.isCurrentTaskSolved === 1) {
+        if (shouldSolutionShow && session.user!.isCurrentTaskSolved === 1) {
             imagePath = `private/tasks/${grades}/solution/sol${userTaskId}.webp`;
         } else {
             imagePath = `private/tasks/${grades}/${userTaskId}.webp`;
@@ -96,32 +107,73 @@ export default defineEventHandler(async (event) => {
         });
     }
 
+    // calculate new rank, points and crystals for the user after solving a task
+    async function setNewUserStats(session: UserSession, isUserAnswerCorrect: boolean, difficulty: number) {
+        let newRank, newPoints, newCrystals: number;
+        let oldRank: number = session.user?.rank as number;
+        let oldPoints: number = session.user?.points as number;
+        let oldCrystals: number = session.user?.crystals as number;
+        newRank = oldRank;
+        const pointsMultiplier = 100;
+        const rankMultiplier = 100;
+        if (isUserAnswerCorrect) {
+            newPoints = oldPoints + difficulty * pointsMultiplier;
+            if (newPoints >= pointsMultiplier * rankMultiplier) {
+                newPoints = newPoints - pointsMultiplier * rankMultiplier;
+                newRank = oldRank + 1;
+            }
+            newCrystals = oldCrystals + 10;
+        } else {
+            newPoints = oldPoints - difficulty * pointsMultiplier * 0.75;
+            if (oldRank > 0 && newPoints < 0) {
+                newPoints = newPoints + pointsMultiplier * rankMultiplier;
+                newRank = oldRank - 1 >= 0 ? oldRank - 1 : 0;
+            } else if (oldRank === 0 && newPoints < 0) {
+                newPoints = 0;
+            }
+            newCrystals = oldCrystals;
+        }
+        //set new rank, points and crystals in the user session and db table userStats
+        await db.sql`UPDATE userStats
+                     SET rank     = ${newRank},
+                         points   = ${newPoints},
+                         crystals = ${newCrystals}
+                     WHERE username = ${session.user!.username}`;
+        await setUserSession(event, {
+            user: {rank: newRank, points: newPoints, crystals: newCrystals}, // User-Daten, die in der Session gespeichert werden
+        });
+        return {newRank, newPoints, pointsDelta: newPoints - oldPoints, newCrystals};
+    }
+
     // get correct answer for current task
     async function getCorrectAnswer(currentTaskId: number, session: UserSession) {
         let correctAnswerQuery;
         switch (session.user?.grade) {
             case 3:
             case 4:
-                correctAnswerQuery = await db.sql`SELECT solution
+                correctAnswerQuery = await db.sql`SELECT solution, difficulty
                                                   FROM tasks34
                                                   WHERE id = ${currentTaskId}`;
                 break;
             case 5 :
             case 6:
-                correctAnswerQuery = await db.sql`SELECT solution
+                correctAnswerQuery = await db.sql`SELECT solution, difficulty
                                                   FROM tasks56
                                                   WHERE id = ${currentTaskId}`;
                 break;
             case 7:
             case 8:
-                correctAnswerQuery = await db.sql`SELECT solution
+                correctAnswerQuery = await db.sql`SELECT solution, difficulty
                                                   FROM tasks78
                                                   WHERE id = ${currentTaskId}`;
                 break;
             default:
                 throw createError({statusCode: 400, message: 'Ungültige Aktion'});
         }
-        return correctAnswerQuery.rows?.[0].solution as string;
+        return {
+            correctAnswer: correctAnswerQuery.rows?.[0].solution as string,
+            difficulty: correctAnswerQuery.rows?.[0].difficulty as number
+        };
     }
 
     // get the current taskId of the user

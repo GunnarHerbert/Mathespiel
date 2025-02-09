@@ -19,7 +19,14 @@ export default defineEventHandler(async (event) => {
                                  VALUES (${body.username}, 0, 10, 0)`;
                     // Starte die Session für den User
                     await setUserSession(event, {
-                        user: {username: body.username, grade: body.grade, isCurrentTaskSolved: 0}, // User-Daten, die in der Session gespeichert werden
+                        user: {
+                            username: body.username,
+                            grade: body.grade,
+                            isCurrentTaskSolved: 0,
+                            rank: 0,
+                            points: 10,
+                            crystals: 0
+                        }, // User-Daten, die in der Session gespeichert werden
                     });
                     const session = await getUserSession(event);
                     await resetGameProfile(session);
@@ -39,7 +46,7 @@ export default defineEventHandler(async (event) => {
                                                            FROM users
                                                            WHERE username = ${body.username}`;
                 if (hashedPasswordRequest.rows?.length === 1 && await verifyPassword(<string>hashedPasswordRequest.rows[0].password, body.password)) {
-                    //get grade from users table
+                    // get grade from users table
                     const gradeRequest = await db.sql`SELECT grade
                                                       FROM users
                                                       WHERE username = ${body.username}`;
@@ -48,8 +55,22 @@ export default defineEventHandler(async (event) => {
                                                                   FROM userGameProfile
                                                                   WHERE username = ${body.username}`;
                     const isCurrentTaskSolved = isCurrentTaskSolvedQuery.rows?.[0].isCurrentTaskSolved as number;
+                    // get current rank, points and crystals from userStats table to store in session
+                    const userStatsRequest = await db.sql`SELECT rank, points, crystals
+                                                          FROM userStats
+                                                          WHERE username = ${body.username}`;
+                    const rank = userStatsRequest.rows?.[0].rank as number;
+                    const points = userStatsRequest.rows?.[0].points as number;
+                    const crystals = userStatsRequest.rows?.[0].crystals as number;
                     await setUserSession(event, {
-                        user: {username: body.username, grade: grade, isCurrentTaskSolved: isCurrentTaskSolved}, // User-Daten, die in der Session gespeichert werden
+                        user: {
+                            username: body.username,
+                            grade: grade,
+                            isCurrentTaskSolved: isCurrentTaskSolved,
+                            rank,
+                            points,
+                            crystals
+                        }, // User-Daten, die in der Session gespeichert werden
                     });
                     return {success: true, message: "user logged in"};
                 } else if (hashedPasswordRequest.rows?.length === 1) {

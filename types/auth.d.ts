@@ -1,8 +1,11 @@
-declare module '#auth-utils'{
-    interface User{
+declare module '#auth-utils' {
+    interface User {
         username?: string;
         grade?: number;
         isCurrentTaskSolved?: number;
+        rank?: number;
+        points?: number;
+        crystals?: number;
     }
 }
 
