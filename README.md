@@ -73,3 +73,32 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## Database
+SQLite command for filling tasks34, tasks56, tasks78 table:
+
+```sql 
+WITH RECURSIVE numbers AS (
+    SELECT 1 AS num
+    UNION ALL
+    SELECT num + 1 FROM numbers WHERE num < 2
+)
+INSERT INTO tasks56 (id, solution, difficulty, year)
+SELECT 560000 - 1 + num, 'A', '3', 2005 FROM numbers;
+
+WITH RECURSIVE numbers AS (
+    SELECT 1 AS num
+    UNION ALL
+    SELECT num + 1 FROM numbers WHERE num < 1
+)
+INSERT INTO tasks56 (id, solution, difficulty, year)
+SELECT 560000 - 1 + 2 + num, 'A', '4', 2005 FROM numbers;
+
+WITH RECURSIVE numbers AS (
+    SELECT 1 AS num
+    UNION ALL
+    SELECT num + 1 FROM numbers WHERE num < 2
+)
+INSERT INTO tasks56 (id, solution, difficulty, year)
+SELECT 560000 - 1 + 3 + num, 'A', '5', 2005 FROM numbers;
+```

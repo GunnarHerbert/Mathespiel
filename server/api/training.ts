@@ -47,15 +47,13 @@ export default defineEventHandler(async (event) => {
         console.log("shouldSolutionShow", shouldSolutionShow);
         console.log("isCurrentTaskSolved", session.user?.isCurrentTaskSolved);
         if (shouldSolutionShow && session.user?.isCurrentTaskSolved === 1) {
-            //TODO: correct filepath to solution
-            userTaskId++;
-            imagePath = `private/tasks/${grades}/${userTaskId}.gif`;
+            imagePath = `private/tasks/${grades}/solution/sol${userTaskId}.webp`;
         } else {
-            imagePath = `private/tasks/${grades}/${userTaskId}.gif`;
+            imagePath = `private/tasks/${grades}/${userTaskId}.webp`;
         }
         try {
             const file = await fs.readFile(imagePath);
-            setHeader(event, 'Content-Type', 'image/gif');
+            setHeader(event, 'Content-Type', 'image/webp');
             return file;
         } catch {
             throw createError({statusCode: 404, message: 'Bild nicht gefunden'});
