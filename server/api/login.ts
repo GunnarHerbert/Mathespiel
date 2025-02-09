@@ -56,7 +56,7 @@ export default defineEventHandler(async (event) => {
                     return {success: false, message: "incorrect username or password"};
                 } else if (hashedPasswordRequest.rows?.length === 0) {
                     console.log("no such user found");
-                    return {success: false, message: "no such user found"};
+                    return {success: false, message: "incorrect username or password"};
                 } else {
                     console.log("###########################unknown server error###########################");
                     return {success: false, message: "unknown server error"};
