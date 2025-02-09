@@ -26,6 +26,10 @@ export default defineEventHandler(async (event) => {
                 return await loadImage(dataFromURL.sol as string, session);
             }
             case 'nextTask': {
+                //set userSession so backend knows that the user has solved the task
+                await setUserSession(event, {
+                    user: {isCurrentTaskSolved: 1}, // User-Daten, die in der Session gespeichert werden
+                });
                 await setNextTaskId(session);
                 await setIsCurrentTaskSolved(session, 0);
                 break;
@@ -44,9 +48,8 @@ export default defineEventHandler(async (event) => {
         let imagePath: string;
         // cast string to boolean
         let shouldSolutionShow: boolean = shouldSolutionShowString == "true";
-        if (shouldSolutionShow) {
+        if (shouldSolutionShow && session.user?.isCurrentTaskSolved === 1) {
             //TODO: correct filepath to solution
-            // BackEnd Validation: check if user has solved the task
             userTaskId = userTaskId as number + 1;
             imagePath = `private/tasks/${grades}/${userTaskId}.gif`;
         } else {

@@ -18,6 +18,7 @@ if (user.value.isCurrentTaskSolved === 1) {
 taskImagePath.value = `/api/training?action=loadImage&sol=${showSolution.value}`;
 
 const toggleSolutionTask = () => {
+
   showSolution.value = !showSolution.value;
   taskImagePath.value = `/api/training?action=loadImage&sol=${showSolution.value}&t=${Date.now()}`;
 };
@@ -72,7 +73,8 @@ const nextTask = async () => {
       </button>
     </div>
     <button @click="toggleSolutionTask"
-            class="mt-2 buttonDefault text-white text-lg px-6 py-3 rounded-lg shadow-md transition duration-200">
+            class="mt-2 text-white text-lg px-6 py-3 rounded-lg shadow-md transition duration-200" :disabled="!isAnswerSent"
+            :class="isAnswerSent ? 'buttonDefault' : 'buttonDisabledDefault'">
       {{ showSolution ? 'Aufgabe' : 'Lösung' }} anzeigen
     </button>
     <button @click="nextTask"
