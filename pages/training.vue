@@ -52,10 +52,9 @@ const nextTask = async () => {
   </button>
   <div class="flex flex-col justify-center items-center h-screen p-4 bg-gray-100">
     <!-- Container für die Rechenaufgabe -->
-    <div class="flex justify-center items-center mb-8">
-      <img :src="taskImagePath" alt="Rechenaufgabe" class="max-w-full h-auto"/>
+    <div class="flex justify-center items-center mb-8 w-full" style="height: 250px;">
+      <img :src="taskImagePath" alt="Rechenaufgabe" class="max-w-full h-full object-contain"/>
     </div>
-    <br>
     <!-- Buttons A bis E in einer Reihe -->
     <div class="flex gap-x-4">
       <button v-for="(option, index) in answerOptions" :key="index" @click="sendAnswer(option)" :disabled="isAnswerSent"
@@ -67,15 +66,15 @@ const nextTask = async () => {
         {{ option }}
       </button>
     </div>
+    <button @click="nextTask"
+            class="mt-2 buttonDefault text-white text-lg px-6 py-3 rounded-lg shadow-md transition duration-200">
+      Nächste Aufgabe
+    </button>
     <button @click="toggleSolutionTask"
             class="mt-2 text-white text-lg px-6 py-3 rounded-lg shadow-md transition duration-200"
             :disabled="!isAnswerSent"
             :class="isAnswerSent ? 'buttonDefault' : 'buttonDisabledDefault'">
       {{ showSolution ? 'Aufgabe' : 'Lösung' }} anzeigen
-    </button>
-    <button @click="nextTask"
-            class="mt-2 buttonDefault text-white text-lg px-6 py-3 rounded-lg shadow-md transition duration-200">
-      Nächste Aufgabe
     </button>
   </div>
 </template>
