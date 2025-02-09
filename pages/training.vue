@@ -53,7 +53,7 @@ const nextTask = async () => {
   <div class="flex flex-col justify-center items-center h-screen p-4 bg-gray-100">
     <!-- Container für die Rechenaufgabe -->
     <div class="flex justify-center items-center mb-8 w-full" style="height: 250px;">
-      <img :src="taskImagePath" alt="Rechenaufgabe" class="max-w-full h-full object-contain"/>
+      <img :src="taskImagePath" alt="Rechenaufgabe" class="max-w-full h-4/5 object-contain"/>
     </div>
     <!-- Buttons A bis E in einer Reihe -->
     <div class="flex gap-x-4">

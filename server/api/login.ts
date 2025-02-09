@@ -12,10 +12,11 @@ export default defineEventHandler(async (event) => {
             case 'registerUser': {
                 const hashedPassword = await hashPassword(body.password);
                 try {
-                    //TODO: check if username is valid
-                    //TODO: sql injection possible? -> use orm (drizzle)
+                    //TODO: check if username is valid syntax
                     await db.sql`INSERT INTO users (username, email, password, grade)
                                  VALUES (${body.username}, ${body.email}, ${hashedPassword}, ${body.grade})`;
+                    await db.sql`INSERT INTO userStats (username, rank, points, crystals)
+                                 VALUES (${body.username}, 0, 10, 0)`;
                     // Starte die Session für den User
                     await setUserSession(event, {
                         user: {username: body.username, grade: body.grade, isCurrentTaskSolved: 0}, // User-Daten, die in der Session gespeichert werden
