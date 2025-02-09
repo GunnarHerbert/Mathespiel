@@ -1,7 +1,8 @@
 declare module '#auth-utils'{
     interface User{
-        username: string;
-        grade: number;
+        username?: string;
+        grade?: number;
+        isCurrentTaskSolved?: number;
     }
 }
 

@@ -1,20 +1,25 @@
 <script setup>
 const answerOptions = ['A', 'B', 'C', 'D', 'E'];
 const showSolution = ref(false);
-const taskImagePath = computed(() => `/api/training?action=loadImage&sol=${showSolution.value}&t=${Date.now()}`);
+const taskImagePath = useState("taskImagePath", () =>
+    `/api/training?action=loadImage&sol=${showSolution.value}`
+);
 const isAnswerSent = ref(false);
 const correctAnswerLetter = ref("");
 const userAnswerLetter = ref("");
-
+const {user, fetch: fetchSession} = useUserSession();
 //TODO: check if task is already solved by user. If yes, show solution and disable buttons
+
+fetchSession();
+if (user.value.isCurrentTaskSolved === 1) {
+  showSolution.value = true;
+  isAnswerSent.value = true;
+}
+taskImagePath.value = `/api/training?action=loadImage&sol=${showSolution.value}`;
 
 const toggleSolutionTask = () => {
   showSolution.value = !showSolution.value;
-  if (showSolution.value) {
-    console.log('Lösung anzeigen');
-  } else {
-    console.log('Aufgabe anzeigen');
-  }
+  taskImagePath.value = `/api/training?action=loadImage&sol=${showSolution.value}&t=${Date.now()}`;
 };
 
 const sendAnswer = async (answer) => {
@@ -22,6 +27,7 @@ const sendAnswer = async (answer) => {
   isAnswerSent.value = true;
   userAnswerLetter.value = answer;
   showSolution.value = true;
+  taskImagePath.value = `/api/training?action=loadImage&sol=${showSolution.value}&t=${Date.now()}`;
   const validateAnswerQuery = await $fetch('/api/training', {
     method: 'POST',
     body: {
@@ -38,11 +44,8 @@ const nextTask = async () => {
   await $fetch('/api/training?action=nextTask', {
     method: 'GET',
   });
-  //trigger computed value taskImagePath to load new image
-  showSolution.value = !showSolution.value;
-  if (showSolution.value) {
-    showSolution.value = false;
-  }
+  showSolution.value = false;
+  taskImagePath.value = `/api/training?action=loadImage&sol=${showSolution.value}&t=${Date.now()}`;
   isAnswerSent.value = false;
 };
 </script>

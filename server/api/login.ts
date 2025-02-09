@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
                                  VALUES (${body.username}, ${body.email}, ${hashedPassword}, ${body.grade})`;
                     // Starte die Session für den User
                     await setUserSession(event, {
-                        user: {username: body.username, grade: body.grade}, // User-Daten, die in der Session gespeichert werden
+                        user: {username: body.username, grade: body.grade, isCurrentTaskSolved: 0}, // User-Daten, die in der Session gespeichert werden
                     });
                     const session = await getUserSession(event);
                     await resetGameProfile(session);
@@ -43,8 +43,12 @@ export default defineEventHandler(async (event) => {
                                                       FROM users
                                                       WHERE username = ${body.username}`;
                     const grade = gradeRequest.rows?.[0].grade as number;
+                    const isCurrentTaskSolvedQuery = await db.sql`SELECT isCurrentTaskSolved
+                                                                  FROM userGameProfile
+                                                                  WHERE username = ${body.username}`;
+                    const isCurrentTaskSolved = isCurrentTaskSolvedQuery.rows?.[0].isCurrentTaskSolved as number;
                     await setUserSession(event, {
-                        user: {username: body.username, grade: grade},
+                        user: {username: body.username, grade: grade, isCurrentTaskSolved: isCurrentTaskSolved}, // User-Daten, die in der Session gespeichert werden
                     });
                     return {success: true, message: "user logged in"};
                 } else if (hashedPasswordRequest.rows?.length === 1) {

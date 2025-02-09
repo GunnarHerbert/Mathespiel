@@ -3,8 +3,7 @@ import {UserSession} from "#auth-utils";
 import {resetGameProfile} from "../utils/resetGameProfile";
 
 export default defineEventHandler(async (event) => {
-    const session = await getUserSession(event);
-    await checkIfUserIsLoggedIn(session);
+    const session = await requireUserSession(event);
     const db = useDatabase();
     // handle POST and GET requests
     if (event.node.req.method === 'POST') {
@@ -28,6 +27,7 @@ export default defineEventHandler(async (event) => {
             }
             case 'nextTask': {
                 await setNextTaskId(session);
+                await setIsCurrentTaskSolved(session, 0);
                 break;
             }
             default:
@@ -39,13 +39,14 @@ export default defineEventHandler(async (event) => {
     async function loadImage(shouldSolutionShowString: string, session: UserSession) {
         // get the current task id of the user
         let userTaskId: number = await getCurrentTaskId(session);
-        let grades: string = convertGradeToGrades(session.user!.grade)!;
+        let grades: string = convertGradeToGrades(session.user!.grade!)!;
         // Bild aus dem geschützten Ordner laden
         let imagePath: string;
         // cast string to boolean
         let shouldSolutionShow: boolean = shouldSolutionShowString == "true";
         if (shouldSolutionShow) {
             //TODO: correct filepath to solution
+            // BackEnd Validation: check if user has solved the task
             userTaskId = userTaskId as number + 1;
             imagePath = `private/tasks/${grades}/${userTaskId}.gif`;
         } else {
@@ -91,6 +92,9 @@ export default defineEventHandler(async (event) => {
         await db.sql`UPDATE userGameProfile
                      SET isCurrentTaskSolved = ${isCurrentTaskSolved}
                      WHERE username = ${session.user!.username}`;
+        await setUserSession(event, {
+            user: {isCurrentTaskSolved: isCurrentTaskSolved}, // User-Daten, die in der Session gespeichert werden
+        });
     }
 
     // get correct answer for current task
@@ -132,21 +136,17 @@ export default defineEventHandler(async (event) => {
     // convert grade to table name
     function convertGradeToGrades(grade: number): string {
         switch (grade) {
-            case 3 || 4:
+            case 3:
+            case 4:
                 return `34`;
-            case 5 || 6:
+            case 5:
+            case 6:
                 return `56`;
-            case 7 || 8:
+            case 7:
+            case 8:
                 return `78`;
             default:
                 throw createError({statusCode: 400, message: 'Illegal State. Grade not found'});
-        }
-    }
-
-    // check if user is logged in
-    async function checkIfUserIsLoggedIn(session: any) {
-        if (!session.user) {
-            throw createError({statusCode: 401, message: 'Nicht eingeloggt'});
         }
     }
 });

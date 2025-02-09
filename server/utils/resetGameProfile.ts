@@ -12,7 +12,7 @@ export const resetGameProfile = async (session: UserSession) => {
             IdQuery = await db.sql`SELECT id
                                    FROM tasks34`;
             break;
-        case 5 :
+        case 5:
         case 6:
             IdQuery = await db.sql`SELECT id
                                    FROM tasks56`;
@@ -43,10 +43,9 @@ export const resetGameProfile = async (session: UserSession) => {
     } else {
         //user already exists but solved all tasks already
         await db.sql`UPDATE userGameProfile
-                     SET currentTaskId = ${currentTask}
-                     WHERE username = ${username}`;
-        await db.sql`UPDATE userGameProfile
-                     SET unsolvedTasks = ${unsolvedTasks}
+                     SET currentTaskId       = ${currentTask},
+                         isCurrentTaskSolved = 0,
+                         unsolvedTasks       = ${unsolvedTasks}
                      WHERE username = ${username}`;
     }
 };
