@@ -1,16 +1,12 @@
 <script setup>
 const answerOptions = ['A', 'B', 'C', 'D', 'E'];
 const showSolution = ref(false);
-const taskImagePath = useState("taskImagePath", () =>
-    `/api/training?action=loadImage&sol=${showSolution.value}`
-);
+const taskImagePath = ref("");
 const isAnswerSent = ref(false);
 const correctAnswerLetter = ref("");
 const userAnswerLetter = ref("");
-const {user, fetch: fetchSession} = useUserSession();
-//TODO: check if task is already solved by user. If yes, show solution and disable buttons
+const {user} = useUserSession();
 
-fetchSession();
 if (user.value.isCurrentTaskSolved === 1) {
   showSolution.value = true;
   isAnswerSent.value = true;
@@ -18,7 +14,6 @@ if (user.value.isCurrentTaskSolved === 1) {
 taskImagePath.value = `/api/training?action=loadImage&sol=${showSolution.value}`;
 
 const toggleSolutionTask = () => {
-
   showSolution.value = !showSolution.value;
   taskImagePath.value = `/api/training?action=loadImage&sol=${showSolution.value}&t=${Date.now()}`;
 };
@@ -73,7 +68,8 @@ const nextTask = async () => {
       </button>
     </div>
     <button @click="toggleSolutionTask"
-            class="mt-2 text-white text-lg px-6 py-3 rounded-lg shadow-md transition duration-200" :disabled="!isAnswerSent"
+            class="mt-2 text-white text-lg px-6 py-3 rounded-lg shadow-md transition duration-200"
+            :disabled="!isAnswerSent"
             :class="isAnswerSent ? 'buttonDefault' : 'buttonDisabledDefault'">
       {{ showSolution ? 'Aufgabe' : 'Lösung' }} anzeigen
     </button>
