@@ -28,7 +28,6 @@ const sendAnswer = async (answer) => {
   isAnswerSent.value = true;
   userAnswerLetter.value = answer;
   showSolution.value = true;
-  taskImagePath.value = `/api/training?action=loadImage&sol=${showSolution.value}&t=${Date.now()}`;
   const validateAnswerQuery = await $fetch('/api/training', {
     method: 'POST',
     body: {
@@ -36,6 +35,7 @@ const sendAnswer = async (answer) => {
       userAnswer: userAnswerLetter.value,
     }
   });
+  taskImagePath.value = `/api/training?action=loadImage&sol=${showSolution.value}&t=${Date.now()}`;
   correctAnswerLetter.value = validateAnswerQuery.correctAnswer;
 };
 
