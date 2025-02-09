@@ -11,6 +11,7 @@ const loginForm = reactive({
   password: "",
 })
 const {loggedIn, user, clear, fetch: fetchSession} = useUserSession();
+const errorMessage = ref("");
 
 async function register() {
   const registerResponse = await $fetch('/api/login', {
@@ -27,8 +28,7 @@ async function register() {
     await fetchSession();
     navigateTo("/main");
   } else {
-    //TODO: if username exits already: give visual feedback
-    console.log(registerResponse.message);
+    errorMessage.value = registerResponse.message;
   }
 }
 
@@ -45,12 +45,12 @@ async function login() {
     await fetchSession();
     navigateTo("/main");
   } else {
-    //TODO: if username or password is wrong: give visual feedback
-    console.log(loginResponse.message);
+    errorMessage.value = loginResponse.message;
   }
 }
 
 function toggleForm() {
+  errorMessage.value = "";
   isRegistering.value = !isRegistering.value;
 }
 
@@ -63,7 +63,11 @@ import '~/assets/css/login.css'
     <p v-else>Du bist nicht eingeloggt.</p>
     <button @click="clear()">Abmelden</button>
   </DevOnly>
-  <div class="auth-container">
+  <div class="auth-container flex flex-col">
+    <!-- Fehlernachricht -->
+    <div v-if="errorMessage" class="text-2xl font-bold mt-2 text-red-600 mb-3">
+      {{ errorMessage }}
+    </div>
     <!--TODO: restrictions for username, ...-->
     <div class="form-wrapper">
       <!-- Registration Form -->

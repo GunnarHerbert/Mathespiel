@@ -33,11 +33,9 @@ export default defineEventHandler(async (event) => {
                     return {success: true, message: "user registered"};
                 } catch (e: any) {
                     if (e.message === 'UNIQUE constraint failed: users.username') {
-                        console.log("user already exists", e.message);
-                        return {success: false, message: "user already exists"};
+                        return {success: false, message: "Dieser Benutzername ist leider bereits vergeben"};
                     } else {
-                        console.log("unknown server error: ", e.message);
-                        return {success: false, message: "unknown server error"};
+                        return {success: false, message: "Es ist ein unbekannter Fehler aufgetreten. Bitte lade die Seite neu und versuche es noch einmal."};
                     }
                 }
             }
@@ -74,14 +72,11 @@ export default defineEventHandler(async (event) => {
                     });
                     return {success: true, message: "user logged in"};
                 } else if (hashedPasswordRequest.rows?.length === 1) {
-                    console.log("incorrect username or password");
-                    return {success: false, message: "incorrect username or password"};
+                    return {success: false, message: "Benutzername oder Passwort ist falsch"};
                 } else if (hashedPasswordRequest.rows?.length === 0) {
-                    console.log("no such user found");
-                    return {success: false, message: "incorrect username or password"};
+                    return {success: false, message: "Benutzername oder Passwort ist falsch"};
                 } else {
-                    console.log("###########################unknown server error###########################");
-                    return {success: false, message: "unknown server error"};
+                    return {success: false, message: "Es ist ein unbekannter Fehler aufgetreten. Bitte lade die Seite neu und versuche es noch einmal."};
                 }
             }
 
