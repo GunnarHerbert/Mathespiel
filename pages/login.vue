@@ -61,8 +61,8 @@ import '~/assets/css/login.css'
   <DevOnly>
     <p v-if="loggedIn">{{ user?.username }}</p>
     <p v-else>Du bist nicht eingeloggt.</p>
+    <button @click="clear()">Abmelden</button>
   </DevOnly>
-  <button @click="clear()">Abmelden</button>
   <div class="auth-container">
     <!--TODO: restrictions for username, ...-->
     <div class="form-wrapper">
