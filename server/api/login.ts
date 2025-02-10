@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
                             grade: body.grade,
                             isCurrentTaskSolved: 0,
                             rank: 0,
-                            points: 10,
+                            points: 250,
                             crystals: 0
                         }, // User-Daten, die in der Session gespeichert werden
                     });
