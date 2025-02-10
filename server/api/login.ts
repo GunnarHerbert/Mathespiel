@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
                     await db.sql`INSERT INTO users (username, email, password, grade)
                                  VALUES (${body.username}, ${body.email}, ${hashedPassword}, ${body.grade})`;
                     await db.sql`INSERT INTO userStats (username, rank, points, crystals)
-                                 VALUES (${body.username}, 0, 10, 0)`;
+                                 VALUES (${body.username}, 0, 250, 0)`;
                     // Starte die Session für den User
                     await setUserSession(event, {
                         user: {

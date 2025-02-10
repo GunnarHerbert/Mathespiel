@@ -36,10 +36,6 @@ const sendAnswer = async (answer) => {
   correctAnswerLetter.value = validateAnswerQuery.correctAnswer;
   pointsDelta.value = validateAnswerQuery.pointsDelta;
   showPointsDelta.value = true;
-  // Nach 2 Sekunden wieder ausblenden
-  setTimeout(() => {
-    showPointsDelta.value = false;
-  }, 3000);
   //TODO: use new rank and points from response to display them (reachable in user.value)
 };
 
