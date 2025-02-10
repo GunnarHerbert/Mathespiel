@@ -1,9 +1,21 @@
 TODO:
-- Punktesystem für Training
+- Loading bar in Training für Punktestand
+- aktueller PunkteDelta-Text zu +10 Kristalle-Text
+- aktuellen Rank als Bild anzeigen (sowohl in Main als auch in Training)
+- Schwierigkeitsstufe der Aufgabe (wie viele Punkte diese Aufgabe gibt) anzeigen
+- Leaderboard
+- Möglichkeit, Feedback zu geben in Main und in db speichern
+- Das Design umstellen auf Raumstation Zeta
+- Username restrictions: keine Sonderzeichen, keine Leerzeichen
+- Freunde adden für extra Punkte
+- Shop: Cosmetics für Charakter, PowerUps für Arena
+- in Main und Training den Rang als Bild anzeigen
+- Code Refactor
 - Datenbanken tasks34 & tasks56 & tasks78 befüllen
 - Performance verbessern:
     - in training.ts: currentTaskId nicht bei jedem Seitenaufruf laden, sondern in Session speichern
-
+- SQLite zu MySQL(?) wechseln
+- Aufgaben statt webp als Text speichern
 
 Projektstruktur:
 Für jede Jahrgangsgruppe (34, 56, 78) eigene Datenbank.
@@ -40,3 +52,4 @@ Erledigt:
   - DONE: entferne newTaskID aus unsolvedTasks
   - DONE: setze currentTask=newTaskID
   - DONE: setze isCurrentTaskSolved=false
+- DONE: Punktesystem für Training
