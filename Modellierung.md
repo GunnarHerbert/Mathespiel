@@ -1,6 +1,4 @@
 TODO:
-- Loading bar in Training für Punktestand
-- aktueller PunkteDelta-Text zu +10 Kristalle-Text
 - aktuellen Rank als Bild anzeigen (sowohl in Main als auch in Training)
 - Schwierigkeitsstufe der Aufgabe (wie viele Punkte diese Aufgabe gibt) anzeigen
 - Leaderboard
@@ -53,3 +51,5 @@ Erledigt:
   - DONE: setze currentTask=newTaskID
   - DONE: setze isCurrentTaskSolved=false
 - DONE: Punktesystem für Training
+- DONE: Loading bar in Training für Punktestand
+

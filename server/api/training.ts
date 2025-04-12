@@ -107,7 +107,7 @@ export default defineEventHandler(async (event) => {
         });
     }
 
-    // calculate new rank, points and crystals for the user after solving a task
+    // calculate new rank, points and crystals for the user after solving a task and save them in db table userStats and in user session
     async function setNewUserStats(session: UserSession, isUserAnswerCorrect: boolean, difficulty: number) {
         let newRank, newPoints, newCrystals: number;
         let oldRank: number = session.user?.rank as number;
