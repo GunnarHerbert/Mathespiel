@@ -160,4 +160,16 @@ button {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(245 158 11 / var(--tw-bg-opacity, 1)) !important;
 }
+
+.buttonDisabledDefault {
+  background-color: rgb(155, 50, 4);
+}
+
+.buttonDisabledCorrect {
+  background-color: rgb(1, 68, 1) !important;
+}
+
+.buttonDisabledFalse {
+  background-color: rgb(86, 2, 2);
+}
 </style>
