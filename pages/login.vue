@@ -58,11 +58,11 @@ import '~/assets/css/login.css'
 </script>
 
 <template>
-  <DevOnly>
-    <p v-if="loggedIn">{{ user?.username }}</p>
-    <p v-else>Du bist nicht eingeloggt.</p>
-    <button @click="clear()">Abmelden</button>
-  </DevOnly>
+<!--  <DevOnly>-->
+<!--    <p v-if="loggedIn">{{ user?.username }}</p>-->
+<!--    <p v-else>Du bist nicht eingeloggt.</p>-->
+<!--    <button @click="clear()">Abmelden</button>-->
+<!--  </DevOnly>-->
   <div class="auth-container flex flex-col">
     <!-- Fehlernachricht -->
     <div v-if="errorMessage" class="text-2xl font-bold mt-2 text-red-600 mb-3">
