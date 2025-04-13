@@ -1,9 +1,29 @@
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-container {
+    width: 90vw;
+    height: 90vh;
+    background-image: url('~/assets/images/Spacestation.jpg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 1rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
 .auth-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: #f4f4f4;
+    height: 55vh;
+    width: 23vw;
+    margin-left: 60%;
+    margin-top: 15%;
+    background-color: rgba(255, 255, 255, 0);
 }
 
 .form-wrapper {
@@ -11,8 +31,11 @@
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-right: 15vw;
+    margin-bottom: 10vh;
     width: 100%;
-    max-width: 400px;
+    max-width: 450px;
+    min-width: 200px;
 }
 
 form {

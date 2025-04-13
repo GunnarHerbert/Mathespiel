@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 const isRegistering = ref(true)
 const registerForm = reactive({
   username: "",
@@ -58,52 +58,57 @@ import '~/assets/css/login.css'
 </script>
 
 <template>
-<!--  <DevOnly>-->
-<!--    <p v-if="loggedIn">{{ user?.username }}</p>-->
-<!--    <p v-else>Du bist nicht eingeloggt.</p>-->
-<!--    <button @click="clear()">Abmelden</button>-->
-<!--  </DevOnly>-->
-  <div class="auth-container flex flex-col">
-    <!-- Fehlernachricht -->
-    <div v-if="errorMessage" class="text-2xl font-bold mt-2 text-red-600 mb-3">
-      {{ errorMessage }}
-    </div>
-    <!--TODO: restrictions for username, ...-->
-    <div class="form-wrapper">
-      <!-- Registration Form -->
-      <div v-if="isRegistering">
-        <h2>Registrierung</h2>
-        <form @submit.prevent="register">
-          <label for="username">Benutzername</label>
-          <input type="text" id="username" v-model="registerForm.username" required/>
+  <!--  <DevOnly>-->
+  <!--    <p v-if="loggedIn">{{ user?.username }}</p>-->
+  <!--    <p v-else>Du bist nicht eingeloggt.</p>-->
+  <!--    <button @click="clear()">Abmelden</button>-->
+  <!--  </DevOnly>-->
+  <div class="wrapper">
+    <!-- Hintergrundbild -->
+    <div class="content-container">
+      <div class="auth-container flex flex-col">
+        <!-- Fehlernachricht -->
+        <div v-if="errorMessage" class="text-2xl font-bold mt-2 text-red-600 mb-3">
+          {{ errorMessage }}
+        </div>
+        <!--TODO: restrictions for username, ...-->
+        <div class="form-wrapper">
+          <!-- Registration Form -->
+          <div v-if="isRegistering">
+            <h2>Registrierung</h2>
+            <form @submit.prevent="register">
+              <label for="username">Benutzername</label>
+              <input id="username" v-model="registerForm.username" required type="text"/>
 
-          <label for="email">Email</label>
-          <input type="email" id="email" v-model="registerForm.email" required/>
+              <label for="email">Email</label>
+              <input id="email" v-model="registerForm.email" required type="email"/>
 
-          <label for="password">Passwort</label>
-          <input type="password" id="password" v-model="registerForm.password" required/>
+              <label for="password">Passwort</label>
+              <input id="password" v-model="registerForm.password" required type="password"/>
 
-          <label for="grade">Klassenstufe</label>
-          <input type="number" id="grade" v-model="registerForm.grade" min="1" max="13" required/>
+              <label for="grade">Klassenstufe</label>
+              <input id="grade" v-model="registerForm.grade" max="13" min="1" required type="number"/>
 
-          <button type="submit">Registrieren</button>
-        </form>
-        <p @click="toggleForm()">Bereits registriert? Hier einloggen</p>
-      </div>
+              <button type="submit">Registrieren</button>
+            </form>
+            <p @click="toggleForm()">Bereits registriert? Hier einloggen</p>
+          </div>
 
-      <!-- Login Form -->
-      <div v-else>
-        <h2>Login</h2>
-        <form @submit.prevent="login">
-          <label for="login-username">Benutzername</label>
-          <input type="text" id="login-username" v-model="loginForm.username" required/>
+          <!-- Login Form -->
+          <div v-else>
+            <h2>Login</h2>
+            <form @submit.prevent="login">
+              <label for="login-username">Benutzername</label>
+              <input id="login-username" v-model="loginForm.username" required type="text"/>
 
-          <label for="login-password">Passwort</label>
-          <input type="password" id="login-password" v-model="loginForm.password" required/>
+              <label for="login-password">Passwort</label>
+              <input id="login-password" v-model="loginForm.password" required type="password"/>
 
-          <button type="submit">Einloggen</button>
-        </form>
-        <p @click="toggleForm">Noch keinen Account? Hier registrieren</p>
+              <button type="submit">Einloggen</button>
+            </form>
+            <p @click="toggleForm">Noch keinen Account? Hier registrieren</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
