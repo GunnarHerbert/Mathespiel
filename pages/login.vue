@@ -13,6 +13,15 @@ const loginForm = reactive({
 const {loggedIn, user, clear, fetch: fetchSession} = useUserSession();
 const errorMessage = ref("");
 
+// Auto-Dismiss nach 5 Sekunden
+watch(errorMessage, (newVal) => {
+  if (newVal) {
+    setTimeout(() => {
+      errorMessage.value = "";
+    }, 4000);
+  }
+})
+
 async function register() {
   const registerResponse = await $fetch('/api/login', {
     method: 'POST',
@@ -64,13 +73,15 @@ import '~/assets/css/login.css'
   <!--    <button @click="clear()">Abmelden</button>-->
   <!--  </DevOnly>-->
   <div class="wrapper">
+    <!-- Fehlernachricht -->
+    <transition name="slide-down">
+      <div v-if="errorMessage" class="error-banner">
+        {{ errorMessage }}
+      </div>
+    </transition>
     <!-- Hintergrundbild -->
     <div class="content-container">
       <div class="auth-container flex flex-col">
-        <!-- Fehlernachricht -->
-        <div v-if="errorMessage" class="text-2xl font-bold mt-2 text-red-600 mb-3">
-          {{ errorMessage }}
-        </div>
         <!--TODO: restrictions for username, ...-->
         <div class="form-wrapper">
           <!-- Registration Form -->

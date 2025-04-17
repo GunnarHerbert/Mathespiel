@@ -38,6 +38,57 @@
     min-width: 200px;
 }
 
+/* --- Fehlerbanner (oben, animiert, unabhängig vom Layout) --- */
+.error-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #dc2626;
+    color: white;
+    text-align: center;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    z-index: 9999;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Slide-down Transition */
+.slide-down-enter-active,
+.slide-down-leave-active {
+    transition: all 0.4s ease;
+}
+
+.slide-down-enter-from {
+    transform: translateY(-100%);
+    opacity: 0;
+}
+
+.slide-down-enter-to {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.slide-down-leave-from {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.slide-down-leave-to {
+    transform: translateY(-100%);
+    opacity: 0;
+}
+
+/* Optional: lokale Fehlermeldung innerhalb der Box */
+.local-error {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
 form {
     display: flex;
     flex-direction: column;
