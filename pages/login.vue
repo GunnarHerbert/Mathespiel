@@ -73,51 +73,62 @@ import '~/assets/css/login.css'
   <!--    <button @click="clear()">Abmelden</button>-->
   <!--  </DevOnly>-->
   <div class="wrapper">
-    <!-- Fehlernachricht -->
+    <!--   Fehlernachricht-->
     <transition name="slide-down">
       <div v-if="errorMessage" class="error-banner">
         {{ errorMessage }}
       </div>
     </transition>
-    <!-- Hintergrundbild -->
-    <div class="content-container">
-      <div class="auth-container flex flex-col">
-        <!--TODO: restrictions for username, ...-->
-        <div class="form-wrapper">
-          <!-- Registration Form -->
-          <div v-if="isRegistering">
-            <h2>Registrierung</h2>
-            <form @submit.prevent="register">
-              <label for="username">Benutzername</label>
-              <input id="username" v-model="registerForm.username" required type="text"/>
+    <div class="wrapper flex justify-center items-center h-screen">
+      <div class="relative">
+        <!-- Hintergrundbild -->
+        <img
+            alt="Spacestation"
+            class="max-w-[90vw] max-h-[90vh] w-auto h-auto rounded-xl shadow-lg"
+            src="@/assets/images/Spacestation.jpg"
+        />
 
-              <label for="email">Email</label>
-              <input id="email" v-model="registerForm.email" required type="email"/>
+        <!-- Main-Inhalte -->
+        <div class="absolute top-0 left-0 w-full h-full">
+          <div class="auth-container flex flex-col">
+            <!--TODO: restrictions for username, ...-->
+            <div class="form-wrapper">
+              <!-- Registration Form -->
+              <div v-if="isRegistering">
+                <h2 style="font-size: large; font-weight: 600">Registrierung</h2>
+                <form @submit.prevent="register">
+                  <label for="username">Benutzername</label>
+                  <input id="username" v-model="registerForm.username" required type="text"/>
 
-              <label for="password">Passwort</label>
-              <input id="password" v-model="registerForm.password" required type="password"/>
+                  <label for="email">Email</label>
+                  <input id="email" v-model="registerForm.email" required type="email"/>
 
-              <label for="grade">Klassenstufe</label>
-              <input id="grade" v-model="registerForm.grade" max="13" min="1" required type="number"/>
+                  <label for="password">Passwort</label>
+                  <input id="password" v-model="registerForm.password" required type="password"/>
 
-              <button type="submit">Registrieren</button>
-            </form>
-            <p @click="toggleForm()">Bereits registriert? Hier einloggen</p>
-          </div>
+                  <label for="grade">Klassenstufe</label>
+                  <input id="grade" v-model="registerForm.grade" max="13" min="1" required type="number"/>
 
-          <!-- Login Form -->
-          <div v-else>
-            <h2>Login</h2>
-            <form @submit.prevent="login">
-              <label for="login-username">Benutzername</label>
-              <input id="login-username" v-model="loginForm.username" required type="text"/>
+                  <button type="submit">Registrieren</button>
+                </form>
+                <p class="mt-1" @click="toggleForm()">Bereits registriert? Hier einloggen</p>
+              </div>
 
-              <label for="login-password">Passwort</label>
-              <input id="login-password" v-model="loginForm.password" required type="password"/>
+              <!-- Login Form -->
+              <div v-else>
+                <h2 style="font-size: large; font-weight: 600">Login</h2>
+                <form @submit.prevent="login">
+                  <label for="login-username">Benutzername</label>
+                  <input id="login-username" v-model="loginForm.username" required type="text"/>
 
-              <button type="submit">Einloggen</button>
-            </form>
-            <p @click="toggleForm">Noch keinen Account? Hier registrieren</p>
+                  <label for="login-password">Passwort</label>
+                  <input id="login-password" v-model="loginForm.password" required type="password"/>
+
+                  <button type="submit">Einloggen</button>
+                </form>
+                <p class="mt-1" @click="toggleForm">Noch keinen Account? Hier registrieren</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
