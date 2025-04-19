@@ -24,7 +24,7 @@ import '~/assets/css/login.css'
       <img
           alt="Spacestation"
           class="max-w-[90vw] max-h-[90vh] w-auto h-auto rounded-xl shadow-lg"
-          src="@/assets/images/Spacestation.jpg"
+          src="assets/images/Spacestation.jpg"
       />
 
       <!-- Main-Inhalte -->
