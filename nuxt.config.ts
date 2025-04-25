@@ -8,6 +8,6 @@ export default defineNuxtConfig({
             database: true,
         }
     },
-    css: ['@/assets/css/global.css'],
+    css: ['~/assets/css/global.css'],
     modules: ['nuxt-auth-utils', '@nuxtjs/tailwindcss'],
 });

@@ -68,7 +68,7 @@ var errorMessage = ref("");
       {{ errorMessage }}
     </div>
   </transition>
-  <div class="wrapper flex justify-center items-center h-screen">
+  <div class="flex justify-center items-center h-screen">
     <div class="relative">
       <!-- Hintergrundbild -->
       <img
@@ -82,11 +82,11 @@ var errorMessage = ref("");
         <a href="/main">
           <img alt="Hauptmenü" class="mainMenuBtn" src="/assets/images/MainMenuButton.jpg">
         </a>
-        <div
-            :style="{ visibility: showPointsDelta ? 'visible' : 'hidden' }"
-            class="crystalText">
-          + 10 Kristalle!
-        </div>
+<!--        <div-->
+<!--            :style="{ visibility: showPointsDelta ? 'visible' : 'hidden' }"-->
+<!--            class="crystalText bg-gray-800 rounded px-[1%] py-[1%]">-->
+<!--          + 10 Kristalle!-->
+<!--        </div>-->
         <!-- Rechenaufgabe bzw SolutionImage -->
         <img :src="taskImagePath" alt="Rechenaufgabe" class="taskImg"/>
         <!-- Points-Text mit reserviertem Platz -->
@@ -106,38 +106,33 @@ var errorMessage = ref("");
         ></div>
 
         <!-- Antwort-Buttons -->
-<!--        <div class="absolute top-[82%] left-[39%] flex gap-x-[8%] bg-purple-600">-->
-<!--          <button v-for="(option, index) in answerOptions" :key="index" :class="!isAnswerSent ? 'buttonDefault' :-->
-<!--                          option === correctAnswerLetter ? 'buttonDisabledCorrect' :-->
-<!--                          option === userAnswerLetter ? 'buttonDisabledFalse' :-->
-<!--                          'buttonDisabledDefault'"-->
-<!--                  :disabled="isAnswerSent"-->
-<!--                  class="w-[300%] text-white text-lg rounded-lg shadow-md transition duration-200"-->
-<!--                  @click="sendAnswer(option)">-->
-<!--            {{ option }}-->
-<!--          </button>-->
-<!--        </div>-->
-<!--        <client-only>-->
-          <button class="absolute top-[80%] left-[80%] w-10 h-auto bg-purple-600">test</button>
-<!--        </client-only>-->
-        <!-- Next Task Button -->
-<!--        <button-->
-<!--            class="absolute top-[82%] left-[83.5%] w-[10.5%] buttonDefault text-white text-sm rounded-lg shadow-md transition duration-200-->
-<!--         whitespace-nowrap truncate-->
-<!--         flex items-center justify-center text-center font-light"-->
-<!--            @click="nextTask"-->
-<!--        >-->
-<!--          Nächste Aufgabe-->
-<!--        </button>-->
+        <div class="absolute top-[82%] left-[39%] flex gap-x-[4%] w-[25%] h-[6%]">
+          <button v-for="(option, index) in answerOptions" :key="index" :class="!isAnswerSent ? 'buttonDefault' :
+                          option === correctAnswerLetter ? 'buttonDisabledCorrect' :
+                          option === userAnswerLetter ? 'buttonDisabledFalse' :
+                          'buttonDisabledDefault'"
+                  :disabled="isAnswerSent"
+                  class="w-[100%] text-white text-[150%] rounded-[100%] shadow-md transition duration-200 answerBtnFontSize"
+                  @click="sendAnswer(option)">
+            {{ option }}
+          </button>
+        </div>
 
-        <!--          &lt;!&ndash; Show Solution Button &ndash;&gt;-->
-        <!--          <button :class="isAnswerSent ? 'buttonDefault' : 'buttonDisabledDefault'"-->
-        <!--                  :disabled="!isAnswerSent"-->
-        <!--                  class="mt-2 text-white text-lg px-6 py-3 rounded-lg shadow-md transition duration-200"-->
-        <!--                  @click="toggleSolutionTask">-->
-        <!--            {{ showSolution ? 'Aufgabe' : 'Lösung' }} anzeigen-->
-        <!--          </button>-->
-        <!--        </div>-->
+        <!-- Next Task Button -->
+        <button
+            class="absolute top-[81.6%] left-[83.5%] w-[10.5%] h-[5%] buttonDefault rounded-lg shadow-md transition duration-200 whitespace-nowrap truncate flex items-center justify-center text-white text-center font-light nextTaskBtnFontSize"
+            @click="nextTask"
+        >
+          Nächste Aufgabe
+        </button>
+
+        <!-- Show Solution Button -->
+        <button :class="isAnswerSent ? 'buttonDefault' : 'buttonDisabledDefault'"
+                :disabled="!isAnswerSent"
+                class="absolute top-[87%] left-[85%] h-[3%] w-[9%] px-0 text-white solutionBtnFontSize rounded-lg shadow-md transition duration-200"
+                @click="toggleSolutionTask">
+          {{ showSolution ? 'Aufgabe' : 'Lösung' }} anzeigen
+        </button>
       </div>
     </div>
   </div>
@@ -165,17 +160,20 @@ var errorMessage = ref("");
 
 .taskImg {
   position: absolute;
+  object-fit: contain;
   top: 26.5%;
   left: 39.5%;
-  width: 54%;
+  width: 100%;
   height: auto;
+  max-width: 54%;
+  max-height: 52%;
   border-radius: min(1.641479 * 0.5vh, 0.5vw);
 }
 
 .pointsTxt {
   position: absolute;
   top: 84%;
-  left: 71%;
+  left: 67%;
   font-weight: 400;
   font-size: min(1.641479 * 2vh, 2vw);
   line-height: min(1.641479 * 2vh, 2vw);
@@ -197,6 +195,18 @@ var errorMessage = ref("");
   /*width: 60%;*/
   /*padding: 15% 25%;*/
   border-radius: 0.375rem;
+}
+
+.nextTaskBtnFontSize{
+  font-size: min(1.641479 * 1.2vh, 1.2vw);
+}
+
+.answerBtnFontSize {
+  font-size: min(1.641479 * 1.6vh, 1.6vw);
+}
+
+.solutionBtnFontSize{
+  font-size: min(1.641479 * 0.9vh, 0.9vw);
 }
 
 .buttonDefault {

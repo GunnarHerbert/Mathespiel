@@ -8,7 +8,6 @@ function logout() {
 }
 
 var errorMessage = ref("");
-import '~/assets/css/login.css'
 </script>
 
 <template>
@@ -18,7 +17,7 @@ import '~/assets/css/login.css'
       {{ errorMessage }}
     </div>
   </transition>
-  <div class="wrapper flex justify-center items-center h-screen">
+  <div class="flex justify-center items-center h-screen">
     <div class="relative">
       <!-- Hintergrundbild -->
       <img
@@ -31,7 +30,7 @@ import '~/assets/css/login.css'
       <div class="absolute top-0 left-0 w-full h-full">
         <!-- Abmelden-Button (responsive) -->
         <button
-            class="absolute bottom-3 right-3 text-[clamp(0.6rem,1vw,0.85rem)] px-[0.8em] py-[0.3em] bg-white/60 text-gray-900 rounded shadow-md hover:brightness-125 transition-all duration-200 ease-in-out"
+            class="absolute bottom-[1%] right-[1%] logoutFontSize px-[0.8em] py-[0.3em] bg-white/60 text-gray-900 rounded shadow-md hover:brightness-125 transition-all duration-200 ease-in-out"
             @click="logout()"
         >
           Abmelden
@@ -39,7 +38,7 @@ import '~/assets/css/login.css'
 
         <!-- Benutzerinfo-Box -->
         <div
-            class="absolute top-10 right-3 pt-8 px-10 pb-8 rounded-xl bg-black/50 backdrop-blur-sm text-white text-xl font-medium shadow-lg space-y-3">
+            class="absolute top-[4%] right-[2%] pt-[1.5%] px-[3%] pb-[1.5%] max-h-[40%] max-w-[30%] rounded-[4%] bg-black/50 backdrop-blur-sm text-white infoFontSize font-medium shadow-lg space-y-[3%]">
           <p><span class="font-semibold text-blue-300"> Benutzername: </span> {{ user?.username }} </p>
           <p><span class="font-semibold text-blue-300"> Rang: </span> {{ user?.rank }} </p>
           <p><span class="font-semibold text-blue-300"> Punkte: </span> {{ user?.points }} </p>
@@ -49,7 +48,7 @@ import '~/assets/css/login.css'
         <!-- Trainings-Button -->
         <div class="flex justify-center items-center h-full">
           <button
-              class="bg-blue-500 text-white font-bold px-6 py-4 text-2xl rounded-lg shadow-md hover:brightness-110 transition"
+              class="h-[8%] w-[12%] bg-blue-500 text-white font-bold trainingBtnFontSize px-[1.8%] py-[1%] pt-[0.7%] rounded shadow-md hover:brightness-110 transition"
               @click="navigateTo('/training')"
           >
             Training
@@ -59,3 +58,19 @@ import '~/assets/css/login.css'
     </div>
   </div>
 </template>
+
+<style scoped>
+.infoFontSize{
+    font-size: min(1.641479 * 1.5vh, 1.5vw);
+}
+
+.trainingBtnFontSize{
+    font-size: min(1.641479 * 2vh, 2vw);
+}
+
+.logoutFontSize{
+    font-size: min(1.641479 * 0.9vh, 0.9vw);
+}
+
+</style>
+

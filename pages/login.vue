@@ -62,24 +62,16 @@ function toggleForm() {
   errorMessage.value = "";
   isRegistering.value = !isRegistering.value;
 }
-
-import '~/assets/css/login.css'
 </script>
 
 <template>
-  <!--  <DevOnly>-->
-  <!--    <p v-if="loggedIn">{{ user?.username }}</p>-->
-  <!--    <p v-else>Du bist nicht eingeloggt.</p>-->
-  <!--    <button @click="clear()">Abmelden</button>-->
-  <!--  </DevOnly>-->
-  <div class="wrapper">
     <!--   Fehlernachricht-->
     <transition name="slide-down">
       <div v-if="errorMessage" class="error-banner">
         {{ errorMessage }}
       </div>
     </transition>
-    <div class="wrapper flex justify-center items-center h-screen">
+    <div class="flex justify-center items-center h-screen">
       <div class="relative">
         <!-- Hintergrundbild -->
         <img
@@ -133,5 +125,113 @@ import '~/assets/css/login.css'
         </div>
       </div>
     </div>
-  </div>
 </template>
+
+<style scoped>
+.auth-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 45%;
+}
+
+.form-wrapper {
+  background: rgba(255, 255, 255, 0.92);
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border-radius: 1rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  width: clamp(240px, 28vw, 400px);
+  max-height: 80%;
+  overflow-y: auto;
+  backdrop-filter: blur(6px);
+}
+
+/* --- Fehlerbanner (oben, animiert, unabhängig vom Layout) --- */
+.error-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #dc2626;
+  color: white;
+  text-align: center;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  z-index: 9999;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Slide-down Transition */
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: all 0.4s ease;
+}
+
+.slide-down-enter-from {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.slide-down-enter-to {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.slide-down-leave-from {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.slide-down-leave-to {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+/* Optional: lokale Fehlermeldung innerhalb der Box */
+.local-error {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  margin-top: 1.5rem;
+  padding: 0.7rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+button:hover {
+  background-color: #0056b3;
+}
+
+p {
+  text-align: center;
+  color: #007bff;
+  cursor: pointer;
+}
+</style>
