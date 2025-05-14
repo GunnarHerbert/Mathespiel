@@ -45,46 +45,31 @@ var errorMessage = ref("");
           <p><span class="font-semibold text-blue-300"> Kristalle:</span> {{ user?.crystals }} </p>
         </div>
 
-        <!-- Trainings-Button -->
-<!--        <div class="flex justify-center items-center h-full">-->
-<!--        Give following button an image -->
-
-<!--        <button-->
-<!--            class="absolute h-[35%] w-[30%] top-[56%] left-[3.7%] trainingButtonPolygon text-white font-bold trainingBtnFontSize px-[1.8%] py-[1%] pt-[0.7%] rounded shadow-md transition"-->
-<!--            @click="navigateTo('/training')"-->
-<!--        >-->
-<!--        </button>-->
         <img
-            alt="TrainingImg"
-            class="absolute h-[48.3%] w-auto top-[53.27%] left-[-1.38%] trainingButtonPolygon px-[1.8%] py-[1%] pt-[0.7%] transition"
+            alt="Training"
+            class="absolute h-[47.8%] w-auto top-[52.8%] left-[-0.5%] trainingButtonPolygon transition"
             src="assets/images/TrainingButton.png"
             @click="navigateTo('/training')">
 
-
-<!--        </div>-->
         <!-- Leaderboard-Button -->
-<!--        <div class="absolute justify-center items-center h-full">-->
           <button
               class="absolute h-[8%] w-auto top-[40%] left-[10%] bg-blue-500 text-white font-bold trainingBtnFontSize px-[1.8%] py-[1%] pt-[0.7%] rounded shadow-md hover:brightness-110 transition"
               @click="navigateTo('/training')"
           >
             Scoreboard
           </button>
-<!--        </div>-->
       </div>
     </div>
   </div>
 </template>
 
-<!--  clip-path: polygon(30% 3%, 50% 6%, 70% 20%, 72% 40%, 85% 43%, 97% 76%, 93% 87%, 80% 92%, 70% 95%, 50% 95%, 40% 90%, 25% 78%, 15% 64%, 10% 50%, 10% 40%, 12% 25%, 18% 15%);-->
-<!--  background: rgba(140, 140, 140, 0.3);-->
 <style scoped>
 .trainingButtonPolygon {
   z-index: 10;
 }
 
 .trainingButtonPolygon:hover {
-  transform: scale(1.04); /* optional: leichtes Vergrößern */
+  transform: scale(1.05); /* optional: leichtes Vergrößern */
   cursor:pointer;
 }
 
