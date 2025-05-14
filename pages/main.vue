@@ -47,11 +47,19 @@ var errorMessage = ref("");
 
         <!-- Trainings-Button -->
 <!--        <div class="flex justify-center items-center h-full">-->
-        <button
-            class="absolute h-[35%] w-[30%] top-[56%] left-[3.7%] trainingButtonPolygon text-white font-bold trainingBtnFontSize px-[1.8%] py-[1%] pt-[0.7%] rounded shadow-md transition"
-            @click="navigateTo('/training')"
-        >
-        </button>
+<!--        Give following button an image -->
+
+<!--        <button-->
+<!--            class="absolute h-[35%] w-[30%] top-[56%] left-[3.7%] trainingButtonPolygon text-white font-bold trainingBtnFontSize px-[1.8%] py-[1%] pt-[0.7%] rounded shadow-md transition"-->
+<!--            @click="navigateTo('/training')"-->
+<!--        >-->
+<!--        </button>-->
+        <img
+            alt="TrainingImg"
+            class="absolute h-[48.3%] w-auto top-[53.27%] left-[-1.38%] trainingButtonPolygon px-[1.8%] py-[1%] pt-[0.7%] transition"
+            src="assets/images/TrainingButton.png"
+            @click="navigateTo('/training')">
+
 
 <!--        </div>-->
         <!-- Leaderboard-Button -->
@@ -68,15 +76,16 @@ var errorMessage = ref("");
   </div>
 </template>
 
+<!--  clip-path: polygon(30% 3%, 50% 6%, 70% 20%, 72% 40%, 85% 43%, 97% 76%, 93% 87%, 80% 92%, 70% 95%, 50% 95%, 40% 90%, 25% 78%, 15% 64%, 10% 50%, 10% 40%, 12% 25%, 18% 15%);-->
+<!--  background: rgba(140, 140, 140, 0.3);-->
 <style scoped>
 .trainingButtonPolygon {
-  clip-path: polygon(30% 3%, 50% 6%, 70% 20%, 72% 40%, 85% 43%, 97% 76%, 93% 87%, 80% 92%, 70% 95%, 50% 95%, 40% 90%, 25% 78%, 15% 64%, 10% 50%, 10% 40%, 12% 25%, 18% 15%);
   z-index: 10;
-  background: rgba(140, 140, 140, 0.3);
 }
 
 .trainingButtonPolygon:hover {
   transform: scale(1.04); /* optional: leichtes Vergrößern */
+  cursor:pointer;
 }
 
 .infoFontSize{
